@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_escalator_lite_ticket_user,escalator_lite.ticket,model_escalator_lite_ticket,escalator.group_escalator_user,1,1,1,0
+access_escalator_lite_ticket_manager,escalator_lite.ticket manager,model_escalator_lite_ticket,escalator.group_escalator_manager,1,1,1,1
+access_escalator_lite_ticket_portal,escalator_lite.ticket portal,model_escalator_lite_ticket,base.group_portal,1,1,1,0
+access_escalator_lite_stage_user,escalator_lite.stage,model_escalator_lite_stage,escalator.group_escalator_user,1,0,0,0
+access_escalator_lite_stage_manager,escalator_lite.stage manager,model_escalator_lite_stage,escalator.group_escalator_manager,1,1,1,1
+access_escalator_lite_stage_portal,escalator_lite.stage portal,model_escalator_lite_stage,base.group_portal,1,0,0,0
+access_escalator_lite_team_user,escalator_lite.team,model_escalator_lite_team,escalator.group_escalator_user,1,0,0,0
+access_escalator_lite_team_manager,escalator_lite.team manager,model_escalator_lite_team,escalator.group_escalator_manager,1,1,1,1

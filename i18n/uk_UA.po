@@ -1,0 +1,1416 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* escalator_lite
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-29 10:59+0000\n"
+"PO-Revision-Date: 2019-09-02 10:04+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 2.2.3\n"
+"Last-Translator: \n"
+"Language: uk\n"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/models/escalator_ticket.py:70
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копіювання)"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_kanban_view
+#, fuzzy
+msgid "<b>Ticket:</b>"
+msgstr "<b>Тікет:</b>"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.my_tickets_ticket
+msgid "<strong>Assigned to</strong>"
+msgstr "<strong>Застосувати до</strong>"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.my_tickets_ticket
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Дата:</strong>"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.my_tickets_ticket
+msgid "<strong>Description</strong>"
+msgstr "<strong>Опис</strong>"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.my_tickets_ticket
+#, fuzzy
+msgid "<strong>Message and communication history</strong>"
+msgstr "<strong>Історія спілкування</strong>"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.my_tickets_ticket
+msgid "<strong>Reported by</strong>"
+msgstr "<strong>Звітував</strong>"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Словник Python, що буде визначати значення за замовчуванням коли створюються "
+"нові записи для цього псевдо."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__kanban_state
+msgid ""
+"A Ticket's kanban state indicates special situations affecting it:\n"
+"\n"
+"                                           * Normal is the default "
+"situation\n"
+"\n"
+"                                           * Blocked indicates something is "
+"preventing the progress of this ticket\n"
+"\n"
+"                                           * Ready for next stage indicates "
+"the ticket is ready to go to next stage"
+msgstr ""
+"Канбан стан тікету показує стан сітуації, що він же її і застосовує:\n"
+"\n"
+"                                           * Нормальний стан за "
+"замовчуванням\n"
+"\n"
+"                                           * Заблоковано, що показує що щось "
+"перешкоджає прогресу\n"
+"\n"
+"                                           * Готовий до нового стану "
+"показує, що тікет готовий до прогресу"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_form
+msgid "Accept Emails From"
+msgstr "Прийнято пошту від"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__unsplash_access_key
+msgid "Access Key"
+msgstr "Ключ доступу"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__access_warning
+msgid "Access warning"
+msgstr "Попередження доступу"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_needaction
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_needaction
+msgid "Action Needed"
+msgstr "Необхідна дія"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__active
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__active
+msgid "Active"
+msgstr "Активно"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__activity_ids
+msgid "Activities"
+msgstr "Активність"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__activity_state
+msgid "Activity State"
+msgstr "Стан активності"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_form_view
+msgid "Add an internal note..."
+msgstr "Додати внутрішьню нотатку"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_id
+#, fuzzy
+msgid "Alias"
+msgstr "Псевдо"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_contact
+msgid "Alias Contact Security"
+msgstr "Безпека псевдо контакту"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__alias_domain
+msgid "Alias Domain"
+msgstr "Псевдо Домену"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_name
+msgid "Alias Name"
+msgstr "Ім'я псевдо"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_domain
+msgid "Alias domain"
+msgstr "Псевдо домену"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_model_id
+msgid "Aliased Model"
+msgstr "Псевдо моделі"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:36
+#, python-format
+msgid "All"
+msgstr "Все"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_google_calendar
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr "Дозволяє користувачам сінхронізувати їх календар з Google Calendar"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_base_import
+msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
+msgstr "Дозволяє користувачам імпортувати дані з CSV/XLS/XLSX/ODS файлів"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_config_settings__group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr "Дозволяє працювати з кількома валютами"
+
+#. module: escalator_lite
+#: model:escalator_lite.team,name:escalator_lite.team_alpha
+msgid "Alpha Team"
+msgstr "Команда Альфа"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_search
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Archived"
+msgstr "Досягнуто"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__user_id
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Assigned to"
+msgstr "Застосовано до"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_voip
+#, fuzzy
+msgid "Asterisk (VoIP)"
+msgstr "Зірочка (VoIP)"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_google_drive
+msgid "Attach Google documents to any record"
+msgstr "Додати Google документ до будь-якого запису"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_attachment_count
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_attachment_count
+msgid "Attachment Count"
+msgstr "Кількість вкладень"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr "Автоматичне заповнення даних компанії"
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,kanban_state:0
+msgid "Blocked"
+msgstr "Заблоковано"
+
+#. module: escalator_lite
+#: model:escalator_lite.stage,name:escalator_lite.stage_canceled
+msgid "Canceled"
+msgstr "Скасовано"
+
+#. module: escalator_lite
+#: model_terms:ir.actions.act_window,help:escalator_lite.support_team_config_action
+#: model_terms:ir.actions.act_window,help:escalator_lite.support_team_dashboard_action
+msgid "Click here to define a new support team."
+msgstr "Натисніть тут щоб створити нову команду підтримки."
+
+#. module: escalator_lite
+#: model_terms:ir.actions.act_window,help:escalator_lite.escalator_stage_action
+#, fuzzy
+msgid "Click to set a new stage in your support pipeline."
+msgstr "Натисніть щоб встановити новий стан вашої лінії підтримки."
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_pad
+#, fuzzy
+msgid "Collaborative Pads"
+msgstr "Спільні напрацювання"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__color
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__color
+msgid "Color Index"
+msgstr "Індекс кольору"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__company_id
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__company_id
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__company_id
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Company"
+msgstr "Компанія"
+
+#. module: escalator_lite
+#: model:ir.ui.menu,name:escalator_lite.menu_config
+msgid "Configuration"
+msgstr "Конфігурація"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__contact_name
+msgid "Contact Name"
+msgstr "Ім'я контакту"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Create Date"
+msgstr "Дата створення"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Create Day"
+msgstr "День створення"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_form_view
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_tree_view
+msgid "Created"
+msgstr "Створено"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__create_uid
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__create_uid
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__create_uid
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__create_uid
+msgid "Created by"
+msgstr "Створено ким"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__create_date
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__create_date
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__create_date
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__create_date
+msgid "Created on"
+msgstr "Створено коли"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.portal_my_tickets
+msgid "Current stage of the ticket"
+msgstr "Наявний стан запиту"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.my_tickets_ticket
+msgid "Current stage of this ticket"
+msgstr "Наявний стан цього запиту"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__report_footer
+msgid "Custom Report Footer"
+msgstr "Нижній колонтитул настроюваного звіту"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/models/escalator_ticket.py:80
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__partner_id
+#, python-format
+msgid "Customer"
+msgstr "Клієнт"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__auth_signup_uninvited
+msgid "Customer Account"
+msgstr "Обліковий запис клієнта"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/models/escalator_ticket.py:83
+#, python-format
+msgid "Customer Email"
+msgstr "Електронна пошта клієнта"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__access_url
+msgid "Customer Portal URL"
+msgstr "URL-адреса порталу клієнта"
+
+#. module: escalator_lite
+#: model:ir.actions.act_window,name:escalator_lite.support_team_dashboard_action
+#: model:ir.ui.menu,name:escalator_lite.menu_dash
+msgid "Dashboard"
+msgstr "Панель керування"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__date_deadline
+msgid "Deadline"
+msgstr "Термін"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__user_default_rights
+msgid "Default Access Rights"
+msgstr "Права доступу за промовчанням"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_defaults
+msgid "Default Values"
+msgstr "Значення за промовчанням"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__default_name
+msgid "Default ticket name"
+msgstr "Ім'я запиту за промовчанням"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_kanban_view
+msgid "Delete"
+msgstr "Видалити"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_form_view
+msgid "Description"
+msgstr "Опис"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__display_name
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__display_name
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__display_name
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ім'я псевдо"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__external_report_layout_id
+msgid "Document Template"
+msgstr "Шаблон документу"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__date_done
+msgid "Done"
+msgstr "Зроблено"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.my_tickets_ticket
+msgid "Edit Task"
+msgstr "Редагувати завдання"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_kanban_view
+msgid "Edit ticket"
+msgstr "Редагувати запит"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__email_from
+msgid "Email"
+msgstr "Електронна пошта"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_form
+msgid "Email Alias"
+msgstr "Електронна пошта псевдо"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__email_from
+msgid "Email address of the contact"
+msgstr "Електронна пошта контакту"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__auth_signup_reset_password
+msgid "Enable password reset from Login page"
+msgstr "Дозволити скидання паролю зі сторінки логіну"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_stage__requirements
+msgid ""
+"Enter here the internal requirements for this stage (ex: Offer sent to "
+"customer). It will appear as a tooltip over the stage's name."
+msgstr ""
+"Введіть внутрішні вимоги для цього стану(наприклад: Пропозиція відправлена "
+"клієнту). Це буде відображено як підказка до імені стану."
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__external_email_server_default
+msgid "External Email Servers"
+msgstr "Зовнішні поштові сервери"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_form_view
+msgid "Extra Info"
+msgstr "Додаткова інформація"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__fail_counter
+msgid "Fail Mail"
+msgstr "Помилка пошти"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.project_feature_tree_view
+msgid "Feature Tracker Tree"
+msgstr "Дерево відслідковування особливостей"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.project_feature_tree_view
+msgid "Feature description"
+msgstr "Опис особливостей"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__fold
+msgid "Folded in Pipeline"
+msgstr ""
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_form
+msgid ""
+"Follow this support team to automatically track the events associated to "
+"users of this team."
+msgstr ""
+"Слідкуйте за цією командою підтримки, щоб автоматично відстежувати події, "
+"пов’язані з користувачами цієї команди."
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_follower_ids
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_follower_ids
+msgid "Followers"
+msgstr "Хто слідкує"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_channel_ids
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Хто слідкує (Канали)"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_partner_ids
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Хто слідкує (Партнери)"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_config_settings__report_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "Текст нижнього колонтитулу, що відображається внизу всіх звітів."
+
+#. module: escalator_lite
+#: selection:escalator_lite.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
+msgstr "Вільна реєстрація"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_google_spreadsheet
+msgid "Google Spreadsheet"
+msgstr "Google таблиці"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Group By"
+msgstr "Групувати за"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_search
+msgid "Group By..."
+msgstr "Групувати за ..."
+
+#. module: escalator_lite
+#: model:ir.module.category,name:escalator_lite.module_category_escalator_lite_management
+#: model:ir.ui.menu,name:escalator_lite.menu_root
+msgid "escalator"
+msgstr ""
+
+#. module: escalator_lite
+#: model:ir.model,name:escalator_lite.model_escalator_lite_ticket
+msgid "escalator Tickets"
+msgstr "Запити на підтримку"
+
+#. module: escalator_lite
+#: model:ir.module.category,description:escalator_lite.module_category_escalator_lite_management
+msgid "Helps you manage your support requests"
+msgstr "Допомагає керувати вашими запитами на підтримку"
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,priority:0
+msgid "High"
+msgstr "Високий"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_form_view
+msgid "I Take It"
+msgstr "Я беру це"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__id
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__id
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__id
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__id
+msgid "ID"
+msgstr ""
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"Ідентифікатор батьківського запису, що містить псевдонім (приклад: проект, "
+"що містить псевдонім створенного завдання)"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__message_unread
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Якщо встановлено прапорець нові повідомлення вимагають вашої уваги."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__message_needaction
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Якщо встановлено прапорець, нові повідомлення вимагають вашої уваги."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__message_has_error
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Якщо встановлено прапорець, у деяких повідомленнях є помилка доставки."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the support "
+"team without removing it."
+msgstr ""
+"Якщо для активного поля встановлено значення false, це дозволить приховати "
+"команду підтримки, не видаляючи її."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_config_settings__alias_domain
+msgid ""
+"If you have setup a catch-all email domain redirected to the Odoo server, "
+"enter the domain name here."
+msgstr ""
+"Якщо ви налаштували загальнодоступний домен електронної пошти, "
+"переадресований на сервер Odoo, введіть тут доменне ім’я."
+
+#. module: escalator_lite
+#: model:escalator_lite.stage,name:escalator_lite.stage_inprogress
+msgid "InProgress"
+msgstr "У процессі"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_config_settings__module_escalator_lite_website
+msgid "Installs module escalator_lite_website"
+msgstr "Встановлює модуль escalator_lite_website"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__partner_autocomplete_insufficient_credit
+msgid "Insufficient credit"
+msgstr "Недостатній кредит"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_is_follower
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_is_follower
+msgid "Is Follower"
+msgstr "Чи відстежувати"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_tree_view
+msgid "Issue Tracker Tree"
+msgstr "Дерево трекера проблем"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__legend_blocked
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__legend_blocked
+#, fuzzy
+msgid "Kanban Blocked Explanation"
+msgstr "Заблоковано"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__legend_done
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__legend_done
+#, fuzzy
+msgid "Kanban Done Explanation"
+msgstr "Зроблено"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__legend_normal
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__legend_normal
+#, fuzzy
+msgid "Kanban Normal Explanation"
+msgstr "Нормально"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__kanban_state
+#, fuzzy
+msgid "Kanban State"
+msgstr "Стан"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_auth_ldap
+msgid "LDAP Authentication"
+msgstr "Автентифікація LDAP"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings____last_update
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage____last_update
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team____last_update
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket____last_update
+msgid "Last Modified on"
+msgstr "Останні зміни коли"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__write_uid
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__write_uid
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__write_uid
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__write_uid
+msgid "Last Updated by"
+msgstr "Останнє оновлення користувачем"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__write_date
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__write_date
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__write_date
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення на"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__last
+msgid "Last in Pipeline"
+msgstr ""
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,priority:0
+msgid "Low"
+msgstr "Низький"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_main_attachment_id
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Головне вкладення"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_inter_company_rules
+msgid "Manage Inter Company"
+msgstr ""
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__group_multi_company
+msgid "Manage multiple companies"
+msgstr ""
+
+#. module: escalator_lite
+#: model:res.groups,name:escalator_lite.group_escalator_lite_manager
+msgid "Manager"
+msgstr "Менеджер"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_has_error
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_has_error
+msgid "Message Delivery error"
+msgstr "Помилка доставки повідомлень"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_ids
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_ids
+msgid "Messages"
+msgstr "Повідомлення"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_form
+msgid "More Info"
+msgstr "Більше інформації"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__group_multi_currency
+msgid "Multi-Currencies"
+msgstr "Мультівалютність"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_search
+msgid "My Teams"
+msgstr "Моя команда"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "My Tickets"
+msgstr "Мої запити"
+
+#. module: escalator_lite
+#: model:escalator_lite.stage,name:escalator_lite.stage_new
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "New"
+msgstr "Новий"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:30
+#, python-format
+msgid "Newest"
+msgstr "Найновіший"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Наступний термін дії"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__activity_summary
+msgid "Next Activity Summary"
+msgstr "Наступний підсумок діяльності"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__activity_type_id
+msgid "Next Activity Type"
+msgstr "Наступний тип діяльності"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/models/escalator_ticket.py:121
+#, python-format
+msgid "No Subject"
+msgstr "Без теми"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:46
+#, python-format
+msgid "None1"
+msgstr ""
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,kanban_state:0
+#: selection:escalator_lite.ticket,priority:0
+msgid "Normal"
+msgstr "Нормально"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_needaction_counter
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кількість дій"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_has_error_counter
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_has_error_counter
+msgid "Number of error"
+msgstr "Кількість помилок"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__message_needaction_counter
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Кількість повідомлень, яка вимагає дії"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__message_has_error_counter
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Кількість повідомлень з помилкою доставки"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__message_unread_counter
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: escalator_lite
+#: selection:escalator_lite.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
+msgstr "За запрошенням"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Необов’язковий ідентифікатор потоку (запису), до якого будуть додані всі "
+"вхідні повідомлення, навіть якщо вони не відповіли на нього. Якщо "
+"встановлено, це повністю відключить створення нових записів."
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,activity_state:0
+msgid "Overdue"
+msgstr "Прострочений"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_stage__legend_blocked
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the ticket is in that stage."
+msgstr ""
+"Замініть значення за замовчуванням, яке відображається для блокованого стану "
+"для вибору канбану, коли запит знаходиться на цій стадії."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_stage__legend_done
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the ticket is in that stage."
+msgstr ""
+"Замініть значення за замовчуванням, яке відображається для готового стану "
+"для вибору канбану, коли запит знаходиться на цьому етапі."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_stage__legend_normal
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the ticket is in that stage."
+msgstr ""
+"Замініть значення за замовчуванням, яке відображається для нормального стану "
+"для вибору канбану, коли запит знаходиться на цій стадії."
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_user_id
+msgid "Owner"
+msgstr "Власник"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__paperformat_id
+msgid "Paper format"
+msgstr "Формат папіру"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Батківська модель"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "Ідентифікатор потоку батьківського запису"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Батьківська модель, що тримає псевдонім. Модель, що містить посилання на "
+"псевдонім, не обов'язково є моделлю, заданою alias_model_id (приклад: проект "
+"(parent_model) та завдання (модель))"
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,activity_state:0
+msgid "Planned"
+msgstr "Заплановано"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"Політика щодо розміщення повідомлення на документі за допомогою поштового "
+"роутера.\n"
+"- кожен: кожен може розміщувати публікації\n"
+"- партнери: тільки автентифіковані партнери\n"
+"- послідовники: лише послідовники відповідного документа або члени наступних "
+"каналів\n"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__access_url
+msgid "Portal Access URL"
+msgstr "URL-адреса доступу до порталу"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__snailmail_duplex
+msgid "Print Both sides"
+msgstr "Друк з обох сторін"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__snailmail_color
+msgid "Print In Color"
+msgstr "Друк у кольорі"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__priority
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_tree_view
+#: model_terms:ir.ui.view,arch_db:escalator_lite.project_feature_tree_view
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Priority"
+msgstr "Пріоритет"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__description
+msgid "Private Note"
+msgstr "Приватна нотатка"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:47
+#, python-format
+msgid "Project"
+msgstr "Проєкт"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_escalator_lite_website
+msgid "Publish on website"
+msgstr "Публікувати на вебсайті"
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,kanban_state:0
+msgid "Ready for next stage"
+msgstr "Готовий до наступної стадії"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "ID низки записів"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__reply_to
+msgid "Reply-To"
+msgstr "Відповісти кому"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__requirements
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_stage_form
+msgid "Requirements"
+msgstr "Вимоги"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__activity_user_id
+msgid "Responsible User"
+msgstr "Відповідальний користувач"
+
+#. module: escalator_lite
+#: model:ir.ui.menu,name:escalator_lite.menu_tickets
+msgid "Search"
+msgstr "Пошук"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:39
+#, python-format
+msgid "Search <span class=\"nolabel\"> (in Content)</span>"
+msgstr "Пошук <span class=\"nolabel\"> (у змісті)</span>"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:43
+#, python-format
+msgid "Search in All"
+msgstr "Шукати всюди"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:40
+#, python-format
+msgid "Search in Messages"
+msgstr "Шукати у повідомленнях"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:42
+#, python-format
+msgid "Search in Stages"
+msgstr "Шукати у стадіях"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__access_token
+msgid "Security Token"
+msgstr ""
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__company_share_partner
+msgid "Share partners to all companies"
+msgstr "Поділіться партнерами з усіма компаніями"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_config_settings__company_share_partner
+msgid ""
+"Share your partners to all companies defined in your instance.\n"
+" * Checked : Partners are visible for every companies, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company "
+"is defined). Partners not related to a company are visible for all companies."
+msgstr ""
+"Поділіться своїх партнерів з усіма компаніями, визначеними у вашому "
+"випадку.\n"
+" * Встановлено: партнери видно для кожної компанії, навіть якщо компанія "
+"визначена для партнера.\n"
+" * Не встановлено: Кожна компанія може бачити лише свого партнера "
+"(партнерів, де визначено компанію). Партнери, не пов'язані з компанією, "
+"видно для всіх компаній."
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__show_effect
+msgid "Show Effect"
+msgstr "Показувати ефект"
+
+#. module: escalator_lite
+#: model:escalator_lite.stage,name:escalator_lite.stage_solved
+msgid "Solved"
+msgstr "Вирішено"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:32
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__stage_id
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_stage_form
+#: model_terms:ir.ui.view,arch_db:escalator_lite.portal_my_tickets
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+#, python-format
+msgid "Stage"
+msgstr "Стадія"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_stage__name
+msgid "Stage Name"
+msgstr "Ім'я стадії"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_stage_search
+msgid "Stage Search"
+msgstr "Пошук стадії"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_stage_form
+msgid "Stage name..."
+msgstr "Ім'я стадії..."
+
+#. module: escalator_lite
+#: model:ir.model,name:escalator_lite.model_escalator_lite_stage
+msgid "Stage of case"
+msgstr "Етап справи"
+
+#. module: escalator_lite
+#: model:ir.actions.act_window,name:escalator_lite.escalator_stage_action
+#: model:ir.ui.menu,name:escalator_lite.menu_escalator_stage_act
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_stage_tree
+msgid "Stages"
+msgstr "Етапи"
+
+#. module: escalator_lite
+#: model_terms:ir.actions.act_window,help:escalator_lite.escalator_stage_action
+msgid ""
+"Stages allow support to easily track how a specific ticket\n"
+"            is positioned in the support cycle."
+msgstr ""
+"Етапи дозволяють підтримці легко відстежувати, як конкретний запит\n"
+"            розташовується в циклі підтримки."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Статус на основі діяльності\n"
+"Прострочено: термін дії вже минув\n"
+"Сьогодні: Дата активності сьогодні\n"
+"Заплановано: майбутні заходи."
+
+#. module: escalator_lite
+#: model:ir.model,name:escalator_lite.model_escalator_lite_team
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__name
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__team_id
+#: model:ir.model.fields,field_description:escalator_lite.field_res_users__escalator_team_id
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_form
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_tree
+msgid "Support Team"
+msgstr "Команда підтримки"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_res_users__escalator_team_id
+msgid ""
+"Support Team the user is member of. Used to compute the members of a support "
+"team through the inverse one2many"
+msgstr ""
+"Команда підтримки, користувачем якої є користувач. Використовується для "
+"обчислення членів групи підтримки через інверсію один-до-кількох"
+
+#. module: escalator_lite
+#: model:ir.actions.act_window,name:escalator_lite.support_team_config_action
+msgid "Support Teams"
+msgstr "Команди підтримки"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_form
+msgid "Support team"
+msgstr "Команда підтримки"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_form
+msgid "Support team name..."
+msgstr "Ім'я команди підтримки..."
+
+#. module: escalator_lite
+#: model:ir.ui.menu,name:escalator_lite.support_team_config
+msgid "Support teams"
+msgstr "Команди підтримки"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_search
+msgid "Supportteams Search"
+msgstr "Пошук команди підтримки"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__user_id
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_search
+msgid "Team Leader"
+msgstr "Лідер команди"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__member_ids
+#: model_terms:ir.ui.view,arch_db:escalator_lite.support_team_view_form
+msgid "Team Members"
+msgstr "Члени команди"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__auth_signup_template_user_id
+msgid "Template user for new users created through signup"
+msgstr ""
+"Шаблон користувача для нових користувачів, створених під час реєстрації"
+
+#. module: escalator_lite
+#: model_terms:ir.actions.act_window,help:escalator_lite.escalator_ticket_categ_act0
+msgid ""
+"The Odoo ticket tracker allows you to efficiently manage things\n"
+"                like internal requests, software development bugs, customer\n"
+"                complaints, project troubles, material breakdowns, etc."
+msgstr ""
+"Трекер запитів Odoo дозволяє ефективно керувати такими речами\n"
+"                як внутрішні запити, помилки з розробки програмного "
+"забезпечення, клієнтські\n"
+"                скарги, проблеми з проектами, матеріальні поломки тощо."
+
+#. module: escalator_lite
+#: model_terms:ir.actions.act_window,help:escalator_lite.act_escalator_lite_ticket_all
+#: model_terms:ir.actions.act_window,help:escalator_lite.action_view_tickets
+msgid ""
+"The Odoo tickets tracker allows you to efficiently manage things\n"
+"                like internal requests, software development bugs, customer\n"
+"                complaints, project troubles, material breakdowns, etc."
+msgstr ""
+"Трекер запитів Odoo дозволяє ефективно керуватитакими речами\n"
+"                як внутрішні запити, помилки з розробки програмного "
+"забезпечення, клієнтські\n"
+"                скарги, проблеми з проектами, матеріальні поломки тощо."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__color
+msgid "The color of the team"
+msgstr "Колір команди"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__reply_to
+msgid ""
+"The email address put in the 'Reply-To' of all emails sent by Odoo about "
+"cases in this support team"
+msgstr ""
+"Електронна адреса, що міститься у 'Відповіді до' всіх електронних листів, "
+"надісланих Odoo про випадки в цій службі підтримки"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Модель (вид документа Odoo), якій відповідає цей псевдонім. Будь-який "
+"вхідний електронний лист, який не відповідає на існуючий запис, спричинить "
+"створення нового запису цієї моделі (наприклад, завдання проекту)"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Назва псевдоніма електронної пошти, напр. 'робочі місця', якщо ви хочете "
+"отримувати електронні листи на <jobs@example.odoo.com>"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__alias_user_id
+msgid ""
+"The owner of records created upon receiving emails on this alias. If this "
+"field is not set the system will attempt to find the right owner based on "
+"the sender (From) address, or will use the Administrator account if no "
+"system user is found for that address."
+msgstr ""
+"Власник записів, створених після отримання електронних листів на цьому "
+"псевдонімі. Якщо це поле не встановлено, система спробує знайти потрібного "
+"власника на основі адреси відправника (From) або використає обліковий запис "
+"адміністратора, якщо для цієї адреси не знайдено жодного користувача системи."
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.portal_my_tickets
+msgid "There are no tickets."
+msgstr "Нема запитів"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_stage__fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"Цей етап складений у поданні kanban, коли на цій стадії немає записів для "
+"відображення."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_stage__last
+msgid "This stage is last for closed tickets."
+msgstr "Цей етап останній для закритих запитів."
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__name
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_form_view
+#: model_terms:ir.ui.view,arch_db:escalator_lite.portal_my_tickets
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Ticket"
+msgstr "Запит"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.my_tickets_ticket
+msgid "Ticket -"
+msgstr "Запит-"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Ticket Search"
+msgstr "Пошук запитів"
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_form_view
+msgid "Ticket Summary..."
+msgstr "Заголовок запиту..."
+
+#. module: escalator_lite
+#: model:ir.actions.act_window,name:escalator_lite.act_escalator_lite_ticket_all
+#: model:ir.actions.act_window,name:escalator_lite.action_view_tickets
+#: model:ir.actions.act_window,name:escalator_lite.escalator_ticket_categ_act0
+#: model:ir.ui.menu,name:escalator_lite.menu_tickets_act
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_graph_view
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_pivot_view
+#: model_terms:ir.ui.view,arch_db:escalator_lite.portal_my_home
+#: model_terms:ir.ui.view,arch_db:escalator_lite.portal_my_home_menu_tickets
+#: model_terms:ir.ui.view,arch_db:escalator_lite.portal_my_tickets
+msgid "Tickets"
+msgstr "Запити"
+
+#. module: escalator_lite
+#: code:addons/escalator_lite/controllers/portal.py:31
+#, python-format
+msgid "Title"
+msgstr "Заголовок"
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,activity_state:0
+msgid "Today"
+msgstr "Сьогодні"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_base_gengo
+msgid "Translate Your Website with Gengo"
+msgstr ""
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Unassigned"
+msgstr "Непризначені"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_unread
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_unread
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_kanban_view
+#: model_terms:ir.ui.view,arch_db:escalator_lite.view_escalator_ticket_filter
+msgid "Unread Messages"
+msgstr "Непрочитані повідомлення"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__message_unread_counter
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_web_unsplash
+msgid "Unsplash Image Library"
+msgstr "Відключити бібліотеку зображень"
+
+#. module: escalator_lite
+#: selection:escalator_lite.ticket,priority:0
+msgid "Urgent"
+msgstr "Нагальний"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_config_settings__module_auth_oauth
+msgid "Use external authentication providers (OAuth)"
+msgstr "Використовувати зовнішніх постачальників аутентифікації (OAuth)"
+
+#. module: escalator_lite
+#: model_terms:ir.actions.act_window,help:escalator_lite.support_team_config_action
+#: model_terms:ir.actions.act_window,help:escalator_lite.support_team_dashboard_action
+msgid ""
+"Use support team to organize your different engineers or\n"
+"                    departments into separate teams. Each team will work in\n"
+"                    its own list of tickets."
+msgstr ""
+"Скористайтеся командою підтримки для організації різних інженерів або\n"
+"                    відділи в окремі колективи. Кожна команда працюватиме\n"
+"                    власний список запитів."
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_stage__sequence
+#, fuzzy
+msgid "Used to order stages. Lower is better."
+msgstr "Використовується для впорядкування етапів. Lower is better."
+
+#. module: escalator_lite
+#: model:res.groups,name:escalator_lite.group_escalator_lite_user
+msgid "User"
+msgstr "Користувач"
+
+#. module: escalator_lite
+#: model:ir.model,name:escalator_lite.model_res_users
+msgid "Users"
+msgstr "Користувачі"
+
+#. module: escalator_lite
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_team__website_message_ids
+#: model:ir.model.fields,field_description:escalator_lite.field_escalator_lite_ticket__website_message_ids
+msgid "Website Messages"
+msgstr "Повідомлення вебсайту"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_team__website_message_ids
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__website_message_ids
+msgid "Website communication history"
+msgstr "Історія спілкування на веб-сайті"
+
+#. module: escalator_lite
+#: model:ir.model.fields,help:escalator_lite.field_escalator_lite_ticket__team_id
+msgid ""
+"When sending mails, the default email address is taken from the support team."
+msgstr ""
+"Під час надсилання електронної пошти за замовчуванням адреса електронної "
+"пошти береться з команди підтримки."
+
+#. module: escalator_lite
+#: model:ir.model,name:escalator_lite.model_escalator_lite_config_settings
+msgid "escalator_lite.config.settings"
+msgstr ""
+
+#. module: escalator_lite
+#: model_terms:ir.ui.view,arch_db:escalator_lite.escalator_ticket_kanban_view
+msgid "oe_kanban_text_red"
+msgstr ""

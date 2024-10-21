@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    <record id="escalator_lite.model_escalator_lite_ticket" model="ir.model">-->
+    <!--&lt;!&ndash;        <field name="website_form_default_field_id" ref="escalator_lite.field_escalator_lite__description" />&ndash;&gt;-->
+    <!--        <field name="website_form_access">True</field>-->
+    <!--        <field name="website_form_label">Create a Ticket</field>-->
+    <!--    </record>-->
+    <data noupdate="1">
+        <record model="escalator_lite.stage" id="stage_new">
+            <field name="name">New</field>
+            <field name="sequence">1</field>
+        </record>
+        <record model="escalator_lite.stage" id="stage_inprogress">
+            <field name="name">InProgress</field>
+            <field name="sequence">2</field>
+        </record>
+        <record model="escalator_lite.stage" id="stage_solved">
+            <field name="name">Solved</field>
+            <field name="fold" eval="False"/>
+            <field name="sequence">70</field>
+        </record>
+        <record model="escalator_lite.stage" id="stage_canceled">
+            <field name="name">Canceled</field>
+            <field name="fold" eval="True"/>
+            <field name="sequence">80</field>
+        </record>
+        <record model="escalator_lite.team" id="team_alpha">
+            <field name="name">Alpha Team</field>
+        </record>
+        <record id="ir_cron_escalator_tickect" model="ir.cron">
+            <field name="name">Creer tickets automatiquement</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model._ticket_generator()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <record id="ir_cron_escalator_tickect" model="ir.cron">
+            <field name="name">Escallader tickets automatiquement</field>
+            <field name="model_id" ref="escalator.model_escalator_lite_ticket"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.ticket_escalled()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <record id="hr_expense_sequense_id" model="ir.sequence">
+            <field name="name">Sequence expense</field>
+            <field name="code">expense.sequence</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">REQ%(y)s|</field>
+            <field name="prefix">|%(month)s|%(day)s</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>
