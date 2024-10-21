@@ -1,0 +1,12 @@
+.vscode/settings.json
+controllers/__pycache__/__init__.cpython-36.pyc
+controllers/__pycache__/portal.cpython-36.pyc
+controllers/__pycache__/website_form.cpython-36.pyc
+models/__pycache__/__init__.cpython-36.pyc
+models/__pycache__/escalator_stage.cpython-36.pyc
+models/__pycache__/escalator_team.cpython-36.pyc
+models/__pycache__/escalator_ticket.cpython-36.pyc
+models/__pycache__/helpdesk_stage.cpython-36.pyc
+models/__pycache__/helpdesk_team.cpython-36.pyc
+models/__pycache__/helpdesk_ticket.cpython-36.pyc
+models/__pycache__/res_users.cpython-36.pyc
