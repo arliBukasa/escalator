@@ -175,7 +175,7 @@
 
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0">New Ticket</h3>
+                        <h3 class="mb-0">New Tickets</h3>
                     </div>
                     <div class="card-body">
                         <t t-if="not loggedin">
