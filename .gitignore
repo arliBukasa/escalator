@@ -10,3 +10,4 @@ models/__pycache__/helpdesk_stage.cpython-36.pyc
 models/__pycache__/helpdesk_team.cpython-36.pyc
 models/__pycache__/helpdesk_ticket.cpython-36.pyc
 models/__pycache__/res_users.cpython-36.pyc
+.vscode/shortcuts.json

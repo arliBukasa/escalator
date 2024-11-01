@@ -119,7 +119,7 @@ class CustomerPortal(CustomerPortal):
         return request.render("escalator.my_tickets_ticket", {'ticket': ticket})
 
     @http.route(['/my/public/tickets/<int:ticket_id>'], type='http', auth="public", website=True)
-    def my_tickets_ticket(self, ticket_id=None, **kw):
+    def my_public_tickets_ticket(self, ticket_id=None, **kw):
         ticket = request.env['escalator_lite.ticket'].browse(ticket_id)
         return request.render("escalator.my_tickets_ticket", {'ticket': ticket})
 
