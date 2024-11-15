@@ -70,7 +70,7 @@ class escalatorTicket(models.Model):
     employee_id=fields.Many2one(comodel_name="hr.employee",string="conserned employee")
     
     @api.model
-    def notification_ticket(self,user):
+    def notification_ticket(self,user,msg=""):
                
         server = smtplib.SMTP('smtp.office365.com', 587)
         server.starttls()
@@ -88,14 +88,53 @@ class escalatorTicket(models.Model):
                 message['To'] = user.employee_id.work_email
                 message['CC'] = user.employee_id.work_email
                 message['Subject'] = "warning for untreated requisition"  
-                
-                message_texte = str("Hi "+user.employee_id.name+"!<br> the system generated a ticket, for an untreated requisition! this is requisition number:"+ticket.expense_sheet_id)
-                          
+                if (msg==""):               
+                    message_texte = str("Hi "+user.employee_id.name+"!<br> the system generated a ticket, for an untreated requisition! this is requisition number:"+ticket.expense_sheet_id)
+                else:
+                    message_texte = msg          
                 mt_html = MIMEText(message_texte, "html")
                 message.attach(mt_html)
                     
-                server.sendmail("notification@bensizwe.com", user.employee_id.work_email, message.as_string())              
-                     
+                server.sendmail("notification@bensizwe.com", user.employee_id.work_email, message.as_string())       
+
+    def notification_standard(self,agent_concerne,createur,msg=""):
+               
+        server = smtplib.SMTP('smtp.office365.com', 587)
+        server.starttls()
+        server.login("support@bensizwe.com", "S.509087353364us")
+        
+               
+        for ticket in self:
+                       
+            logging.info("======================== Tickets consernés dans notification =============================")
+            logging.info(ticket)
+            logging.info("======================== agent concerné =============================")
+            logging.info(agent_concerne)
+
+            logging.info("======================== Message du ticket =============================:")
+            logging.info(msg) 
+            logging.info("======================== Numéro du ticket =============================:")
+            logging.info(ticket.id)  
+            logging.info("======================== Message destinateurs =============================:")
+            logging.info(createur)
+            message_texte=""
+            if createur == False:
+                createur = "arnold.bukasa1@gmail.com"
+
+            message= MIMEMultipart('alternative')
+            message['To'] = agent_concerne
+            message['CC'] =createur
+            message['Subject'] = "Ticket:/"  + str(ticket.id)
+            if (msg==""): 
+                if agent_concerne:
+                   message_texte = str("Hi "+agent_concerne +"!<br> the system generated a ticket numeber! :"+str(ticket.id))
+            else:
+                message_texte = msg          
+            mt_html = MIMEText(message_texte, "html")
+            message.attach(mt_html)
+                
+            server.sendmail("support@bensizwe.com", agent_concerne, message.as_string())
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         """ This function sets partner email address based on partner
@@ -194,14 +233,23 @@ class escalatorTicket(models.Model):
 
     @api.model_create_single
     def create(self, vals):
+
+        #recuperer le partenaire de l'utilisateur connecté et l'ajouter comme partenaire du ticket et l'email de l'utilisateur connecté comme email_from du ticket
+        vals['partner_id'] = self.env.user.partner_id.id
+        vals['email_from'] = self.env.user.email if self.env.user.email else self.env.user.partner_id.email
+
+
         context = dict(self.env.context)
         context.update({
             'mail_create_nosubscribe': False,
         })
+        #
         res = super(escalatorTicket, self.with_context(context)).create(vals)
         # res = super().create(vals)
         if res.partner_id:
             res.message_subscribe([res.partner_id.id])
+            if res.partner_id.email:
+                res.email_from=res.partner_id.email
         return res
 
 
@@ -209,9 +257,23 @@ class escalatorTicket(models.Model):
     def write(self, vals):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
+            # call notification_standard() to send message that stage changed
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
+            
+            # envoie d'une notification standard pour  changement d'etat du ticket
+             
             stage = self.env['escalator_lite.stage'].browse(vals['stage_id'])
+            logging.info("=======stage======")
+            logging.info(stage)
+            logging.info(self.name)
+            logging.info(stage.name)
+
+            if 'kanban_state' in vals:
+                message_texte=str("Hi !<br>your ticket : <b>'"+str(self.name)+"'</b> ,  has been updated the actual stage is: '"+str(stage.name)+"'")
+
+                self.notification_standard(self.email_from,self.user_id.partner_id.email,message_texte)
+            
             if stage.last:
                 vals.update({'date_done': fields.Datetime.now()})
             else:

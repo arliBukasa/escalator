@@ -12,7 +12,7 @@
                 </header>
                 <sheet string="Ticket">
                     <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" groups="escalator_lite.group_escalator_lite_manager" class="oe_stat_button" icon="fa-archive">
+                        <button name="toggle_active" type="object" groups="escalator.group_escalator_manager" class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                         </button>
                     </div>
