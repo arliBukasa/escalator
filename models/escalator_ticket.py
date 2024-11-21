@@ -235,9 +235,14 @@ class escalatorTicket(models.Model):
     def create(self, vals):
 
         #recuperer le partenaire de l'utilisateur connecté et l'ajouter comme partenaire du ticket et l'email de l'utilisateur connecté comme email_from du ticket
-        vals['partner_id'] = self.env.user.partner_id.id
-        vals['email_from'] = self.env.user.email if self.env.user.email else self.env.user.partner_id.email
+        if "partner_id" in vals:
+            # browse the partner
+            partner = self.env['res.partner'].browse(vals['partner_id'])
+            # update the email_from
+            vals['email_from'] = partner.email
 
+        logging.info("=============================================== vals dans create ===============================================")
+        logging.info(vals)
 
         context = dict(self.env.context)
         context.update({
@@ -248,8 +253,7 @@ class escalatorTicket(models.Model):
         # res = super().create(vals)
         if res.partner_id:
             res.message_subscribe([res.partner_id.id])
-            if res.partner_id.email:
-                res.email_from=res.partner_id.email
+
         return res
 
 
