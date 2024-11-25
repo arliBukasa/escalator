@@ -251,6 +251,8 @@ class escalatorTicket(models.Model):
         #
         res = super(escalatorTicket, self.with_context(context)).create(vals)
         # res = super().create(vals)
+        msg="hi! "+str(partner.email)+" there is a new Tickect '"+ res.name+"', please get connected to see"
+        self.notification_standard("arnold.bukasa1@gmail.com",partner.email,msg)
         if res.partner_id:
             res.message_subscribe([res.partner_id.id])
 
