@@ -233,34 +233,28 @@ class escalatorTicket(models.Model):
 
     @api.model_create_single
     def create(self, vals):
-
-        #recuperer le partenaire de l'utilisateur connecté et l'ajouter comme partenaire du ticket et l'email de l'utilisateur connecté comme email_from du ticket
-        if "partner_id" in vals:
-            # browse the partner
-            partner = self.env['res.partner'].browse(vals['partner_id'])
-            # update the email_from
+        partner = self.env['res.partner'].browse(vals.get('partner_id'))
+        if partner:
             vals['email_from'] = partner.email
 
         logging.info("=============================================== vals dans create ===============================================")
         logging.info(vals)
 
-        context = dict(self.env.context)
-        context.update({
-            'mail_create_nosubscribe': False,
-        })
-        #
+        context = dict(self.env.context, mail_create_nosubscribe=False)
         res = super(escalatorTicket, self.with_context(context)).create(vals)
-        
-        # Envoie de notification
-        msg="hi! "+str(partner.email)+" there is a new Tickect <b>'"+ str(res.name)+"'</b>, please click here : https://apps.bzapps.ovh/my/tickets/"+str(res.id)+"? to access!"
-        res.notification_standard("support@bensizwe.com",partner.email,msg)
-        logging.info("=============== envoie de notification  ===============================================")
-        logging.info(msg,res)
 
-        # res = super().create(vals)
-        
-        if res.partner_id:
-            res.message_subscribe([res.partner_id.id])
+        #get the actual domain
+        domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        logging.info("=============================================== domaine actuel ===============================================")
+        logging.info(domain)
+
+        if partner:
+            msg = f"Hi! {partner.email}, there is a new Ticket <b>'{res.name}'</b>, please click here: {domain}/my/tickets/{res.id}? to access!"
+            res.notification_standard("arnold.bukasa1@gmail.com", partner.email, msg)
+            logging.info("=============== envoie de notification  ===============================================")
+            logging.info(msg)
+
+            res.message_subscribe([partner.id])
 
         return res
 
