@@ -1,24 +1,50 @@
 from odoo import http
-from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.http import request
 import logging
 
-
-class ContactController(WebsiteForm):
+class ContactController(http.Controller):  # Assurez-vous d'étendre http.Controller si ce n'est pas un sous-contrôleur.
 
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
-    def website_form(self, model_name, **kwargs):
+    def website_form(self, model_name, contact_name="", email_from="", **kwargs):
         if model_name == 'escalator_lite.ticket':
-            if request.session.uid:
-                request.params['partner_id'] = request.env.user.partner_id.id
-                request.params['email_from'] = request.env.user.partner_id.email
-                kwargs['partner_id'] = request.env.user.partner_id.id
-                kwargs['email_from'] = request.env.user.partner_id.email
+            # Ajouter des logs pour déboguer
+            logging.info('============================ Request Params: %s', request.params)
+            logging.info('============================ Email From: %s', email_from)
+            logging.info('============================ Contact Name: %s', contact_name)
 
-                logging.info('============================ Partner ID: %s,%s,%s', request.env.user.partner_id.id,request.env.user.partner_id.name,request.env.user.partner_id.email)
-                logging.info('============================ Parametres: %s', request.params)
-                logging.info('============================ Kwargs:')
-                logging.info(kwargs)
+            # Ajouter les valeurs des champs personnalisés dans kwargs
+            if email_from:
+                kwargs['email_from'] = email_from
+            if contact_name:
+                kwargs['contact_name'] = contact_name
+            
+            logging.info('============================ Kwargs avant création: %s', kwargs)
+
+            # Créer un nouvel enregistrement
+            try:
+                fields = kwargs.copy()  # Copie pour éviter des problèmes si d'autres champs sont modifiés
+                if 'attachment' in fields:
+                    attachment = request.httprequest.files['attachment']
+                    del fields['attachment']  # Supprimer avant la création du ticket
+                else:
+                    attachment = None
+
+                ticket = request.env['escalator_lite.ticket'].sudo().create(fields)
+
+                # Ajouter un message pour les pièces jointes
+                if attachment:
+                    ticket.message_post(
+                        body=_('Attachment: %s') % attachment.filename,
+                        attachment_ids=[(0, 0, {
+                            'name': attachment.filename,
+                            'datas': attachment.read(),
+                            'datas_fname': attachment.filename,
+                        })]
+                    )
+                # Renvoyer la page de succès
+                return request.render('escalator.ticket_thanks', {})
+            except Exception as e:
+                logging.error('Erreur lors de la création du ticket: %s', str(e))
+                return request.render('escalator.ticket_error', {'error': str(e)})
 
         return super(ContactController, self).website_form(model_name, **kwargs)
-# 

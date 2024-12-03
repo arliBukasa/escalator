@@ -31,8 +31,8 @@ class escalatorTicket(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', index=True)
     commercial_partner_id = fields.Many2one(
         related='partner_id.commercial_partner_id', string='Customer Company', store=True, index=True)
-    contact_name = fields.Char('Contact Name')
-    email_from = fields.Char('Email', help="Email address of the contact", index=True)
+    contact_name = fields.Char('Contact Name', track_visibility='onchange')
+    email_from = fields.Char('Email', help="Email address of the contact", index=True, track_visibility='onchange')
     user_id = fields.Many2one('res.users', string='Assigned to', track_visibility='onchange', index=True, default=False)
     team_id = fields.Many2one('escalator_lite.team', string='Support Team', track_visibility='onchange',
         default=lambda self: self.env['escalator_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid),
@@ -250,11 +250,15 @@ class escalatorTicket(models.Model):
 
         if partner:
             msg = f"Hi! {partner.email}, there is a new Ticket <b>'{res.name}'</b>, please click here: {domain}/my/tickets/{res.id}? to access!"
-            res.notification_standard("arnold.bukasa1@gmail.com", partner.email, msg)
+            res.notification_standard("support@bensizwe.com", partner.email, msg)
             logging.info("=============== envoie de notification  ===============================================")
             logging.info(msg)
 
             res.message_subscribe([partner.id])
+        else:
+            if vals.get('email_from'):
+                msg = f"Hi! there is a new Ticket <b>'{res.email_from}'</b>, please click here: {domain}/my/tickets/{res.id}? to access!"
+                res.notification_standard("support@bensizwe.com", vals.get('email_from'), msg)
 
         return res
 
