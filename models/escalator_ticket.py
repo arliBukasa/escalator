@@ -3,6 +3,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 import re
 from odoo.exceptions import AccessError
 import datetime
+import pytz
 import logging
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -242,7 +243,7 @@ class escalatorTicket(models.Model):
         # getting date from vals and convert format if it is not in the  format "%m/%d/%Y %H:%M:%S"
         if vals.get('date_deadline'):
             try:
-                vals['date_deadline'] = datetime.datetime.strptime(vals.get('date_deadline'), "%m/%d/%Y %H:%M:%S")
+                vals['date_deadline'] =  self._convert_date_to_server_format(vals['date_deadline'])
             except ValueError:
                 pass        
         context = dict(self.env.context, mail_create_nosubscribe=False)
@@ -267,6 +268,29 @@ class escalatorTicket(models.Model):
 
         return res
 
+    def _convert_date_to_server_format(self, date_str):
+        """
+        Convert a date string to Odoo's server date format (%Y-%m-%d %H:%M:%S).
+        Handles multiple input formats and adjusts for timezones if needed.
+        """
+        input_formats = ["%d/%m/%Y %H:%M:%S", "%m/%d/%Y %H:%M:%S"]  # Add more formats as needed
+        for fmt in input_formats:
+            try:
+                # Parse date using the current format
+                user_timezone = self.env.user.tz or 'UTC'
+                user_time = datetime.datetime.strptime(date_str, fmt)
+                
+                logging.info(f"=============================================== user_time : {user_time,user_timezone}===============================================")
+                # Localize to user's timezone and convert to UTC
+                local_tz = pytz.timezone(user_timezone)
+                local_time = local_tz.localize(user_time, is_dst=None)
+                utc_time = local_time.astimezone(pytz.utc)
+                
+                # Return in Odoo's default server format
+                return utc_time.strftime("%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                continue  # Try the next format
+        raise ValueError(f"Date format not recognized: {date_str}")
 
     @api.multi
     def write(self, vals):
