@@ -343,6 +343,25 @@
             </div>
         </t>
     </template>
+    <!-- error page ! -->
+    <template id="escalator.ticket_error" name="Error">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <h1>Oops!</h1>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger">
+                            An error occurred while processing your request.
+                            <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                        </div>
+                        <p>
+                            Please try again later.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
 
     <!--
 

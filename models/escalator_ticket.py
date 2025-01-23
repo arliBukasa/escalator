@@ -239,7 +239,12 @@ class escalatorTicket(models.Model):
 
         logging.info("=============================================== vals dans create ===============================================")
         logging.info(vals)
-
+        # getting date from vals and convert format if it is not in the  format "%m/%d/%Y %H:%M:%S"
+        if vals.get('date_deadline'):
+            try:
+                vals['date_deadline'] = datetime.datetime.strptime(vals.get('date_deadline'), "%m/%d/%Y %H:%M:%S")
+            except ValueError:
+                pass        
         context = dict(self.env.context, mail_create_nosubscribe=False)
         res = super(escalatorTicket, self.with_context(context)).create(vals)
 

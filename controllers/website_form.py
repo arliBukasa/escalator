@@ -42,7 +42,7 @@ class ContactController(http.Controller):  # Assurez-vous d'étendre http.Contro
                         })]
                     )
                 # Renvoyer la page de succès
-                return request.render('escalator.ticket_thanks', {})
+                return request.render('escalator.ticket_thanks')
             except Exception as e:
                 logging.error('Erreur lors de la création du ticket: %s', str(e))
                 return request.render('escalator.ticket_error', {'error': str(e)})
