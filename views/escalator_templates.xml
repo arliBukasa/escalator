@@ -167,11 +167,10 @@
     <template id="new_ticket" name="New Ticket">
         <t t-call="portal.portal_layout">
             <t t-set="page_name">newticket</t>
-            <form action="/website_form/" method="post" class="s_website_form container-fluid mt32"
-                  enctype="multipart/form-data" data-model_name="escalator_lite.ticket"
-                  t-att-data-success_page="'/my/tickets' if loggedin else '/'">
-<!--                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>-->
-<!--                <input name="partner_id" required="1" type="hidden" t-att-value="partner_id"/>-->
+            <form action="/escalator/create/escalator_lite.ticket" method="post" class=" container-fluid mt32"
+                  enctype="multipart/form-data" data-model_name="escalator_lite.ticket" data-success_page="/escalator/success" data-error_page="/escalator/error" ajax="False">
+                <input type="hidden" name="success_url" value="/escalator/success"/>
+                <input type="hidden" name="error_url" value="/escalator/error"/>
 
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
@@ -304,6 +303,31 @@
 
                 </div>
             </form>
+            
+            <script type="text/javascript">
+                odoo.define('escalator.form_submit', function (require) {
+                    'use strict';
+                    
+                    var core = require('web.core');
+                    var ajax = require('web.ajax');
+                    
+                    $(document).ready(function() {
+                        $('form.s_website_form').on('submit', function(e) {
+                            e.preventDefault();
+                            
+                            var $form = $(this);
+                            var $button = $form.find('.o_website_form_send');
+                            
+                            // Désactiver le bouton pendant l'envoi
+                            $button.prop('disabled', true);
+                            $button.text('Sending...');
+                            
+                            // Envoyer le formulaire
+                            $form.off('submit').submit();
+                        });
+                    });
+                });
+            </script>
         </t>
     </template>
     <!-- TICKET SUCCES PAGE -->
@@ -336,9 +360,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-4">
-                        <t t-call="website.company_description"/>
-                    </div>
+                   
                 </div>
             </div>
         </t>
@@ -463,94 +485,122 @@
 
 <!--<a class="btn btn-secondary btn-block o_download_btn" title="Download" data-oe-model="ir.ui.view" data-oe-id="1777" data-oe-field="arch" data-oe-xpath="/data/xpath[1]/div/t[1]/t[3]/ul[1]/li[1]/div[1]/div[1]/a[1]" href="/my/orders/1?access_token=43473712-d7a4-4bfd-9d77-c4a329d27598&amp;report_type=pdf&amp;download=true"><i class="fa fa-download"></i> Download</a>-->
 
-</odoo>
+    <!-- Portal Ticket Statistics Template -->
+    <template id="portal_ticket_stats" name="Ticket Statistics">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name">ticket_stats</t>
+            <div class="container mt32">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Ticket Statistics</h1>
+                        <div class="row mt32">
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Tickets</h5>
+                                        <h2 class="text-primary"><t t-esc="total_tickets"/></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Open Tickets</h5>
+                                        <h2 class="text-warning"><t t-esc="open_tickets"/></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Closed Tickets</h5>
+                                        <h2 class="text-success"><t t-esc="closed_tickets"/></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">My Tickets</h5>
+                                        <h2 class="text-info"><t t-esc="my_tickets"/></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt32">
+                            <div class="col-md-6">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Urgent Tickets</h5>
+                                        <h2 class="text-danger"><t t-esc="urgent_tickets"/></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <a href="/my/tickets" class="btn btn-primary btn-lg">View All Tickets</a>
+                                <a href="/escalator/new" class="btn btn-success btn-lg ml-2">Create New Ticket</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
 
-<!--
-    <t name="Homepage" t-name="website.homepage1">
-  <t t-call="website.layout">
-    <t t-set="pageName" t-value="'homepage'"/>
-    <div id="wrap" class="oe_structure oe_empty">
-      <form action="/website_form/" method="post" class="s_website_form container-fluid mt32" enctype="multipart/form-data" data-model_name="new" data-success_page="zzz">
-        <div class="container">
-          <div class="row form-group form-field o_website_form_required">
-            <div class="col-md-4 text-md-right">
-              <label class="col-form-label" for="name">
-                    Возможность
-                </label>
-            </div>
-            <div class="col-md-8 pb16">
-              <input class="form-control o_website_form_input" name="name" required="1" type="text"/>
-            </div>
-          </div>
-          <div class="row form-group form-field">
-            <div class="col-md-4 text-md-right">
-              <label class="col-form-label" for="date_deadline">
-                    Ожидаемое закрытие
-                </label>
-            </div>
-            <div class="col-md-8">
-              <div class="o_website_form_date input-group date" id="datepicker5" data-target-input="nearest">
-                <input class="form-control datetimepicker-input o_website_form_input" data-target="#datepicker5" name="date_deadline" type="text"/>
-                <div class="input-group-append" data-target="#datepicker5" data-toggle="datetimepicker">
-                  <div class="input-group-text">
-                    <i class="fa fa-calendar"/>
-                  </div>
+    <!-- Ticket Success Page -->
+    <template id="ticket_success" name="Ticket Success">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card mt-5">
+                                <div class="card-body text-center">
+                                    <div class="mb-4">
+                                        <i class="fa fa-check-circle text-success" style="font-size: 4rem;"></i>
+                                    </div>
+                                    <h2 class="text-success">Success!</h2>
+                                    <p class="lead"><t t-esc="message or 'Your ticket has been created successfully!'"/></p>
+                                    <p t-if="ticket_id">Ticket ID: <strong><t t-esc="ticket_id"/></strong></p>
+                                    <div class="mt-4">
+                                        <a href="/escalator/new" class="btn btn-primary">Create Another Ticket</a>
+                                        <a href="/" class="btn btn-secondary ml-2">Back to Home</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-          <div class="row form-group form-field">
-            <div class="col-md-4 text-md-right">
-              <label class="col-form-label" for="priority">
-                    Приоритет
-                </label>
+        </t>
+    </template>
+
+    <!-- Ticket Error Page -->
+    <template id="ticket_error" name="Ticket Error">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card mt-5">
+                                <div class="card-body text-center">
+                                    <div class="mb-4">
+                                        <i class="fa fa-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                                    </div>
+                                    <h2 class="text-danger">Error!</h2>
+                                    <p class="lead">There was an error creating your ticket.</p>
+                                    <p t-if="error_message" class="text-muted"><t t-esc="error_message"/></p>
+                                    <div class="mt-4">
+                                        <a href="/escalator/new" class="btn btn-primary">Try Again</a>
+                                        <a href="/" class="btn btn-secondary ml-2">Back to Home</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-8">
-              <div class="o_website_form_flex">
-                <div class="radio o_website_form_flex_item">
-                  <label>
-                    <input class="o_website_form_input" name="priority" value="0" type="radio"/>
-                    <span>
-                                Низкий
-                            </span>
-                  </label>
-                </div>
-                <div class="radio o_website_form_flex_item">
-                  <label>
-                    <input class="o_website_form_input" name="priority" value="1" type="radio"/>
-                    <span>
-                                Средний
-                            </span>
-                  </label>
-                </div>
-                <div class="radio o_website_form_flex_item">
-                  <label>
-                    <input class="o_website_form_input" name="priority" value="2" type="radio"/>
-                    <span>
-                                Высокий
-                            </span>
-                  </label>
-                </div>
-                <div class="radio o_website_form_flex_item">
-                  <label>
-                    <input class="o_website_form_input" name="priority" value="3" type="radio"/>
-                    <span>
-                                Очень высокий
-                            </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7 pb72 pt120">
-              <button class="btn btn-primary btn-lg o_website_form_send" style="position: relative; overflow: hidden;">Отправить</button>
-              <span id="o_website_form_result"/>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </t>
-</t>
--->
+        </t>
+    </template>
+
+</odoo>

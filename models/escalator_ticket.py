@@ -68,73 +68,175 @@ class escalatorTicket(models.Model):
         comodel_name='hr.expense.sheet',
         ondelete='restrict',
     )
-    employee_id=fields.Many2one(comodel_name="hr.employee",string="conserned employee")
+    employee_id = fields.Many2one(comodel_name="hr.employee", string="Concerned employee")
+    progress = fields.Float(string='Progress (%)', compute='_compute_progress', store=True)
+    attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
+    category_id = fields.Many2one('escalator_lite.category', string='Category')
+    estimated_hours = fields.Float(string='Estimated Hours')
+    actual_hours = fields.Float(string='Actual Hours')
+    resolution = fields.Text(string='Resolution')
+    is_escalated = fields.Boolean(string='Is Escalated', default=False)
+    escalation_date = fields.Datetime(string='Escalation Date')
+    
+    resolution_time = fields.Float(string='Resolution Time (Hours)', compute='_compute_resolution_time', store=True)
+    is_final_stage = fields.Boolean(string='Is Final Stage', compute='_compute_is_final_stage', store=True)
+    
+    @api.depends('stage_id')
+    def _compute_progress(self):
+        for ticket in self:
+            if ticket.stage_id:
+                # Calculate progress based on stage sequence
+                all_stages = self.env['escalator_lite.stage'].search([], order='sequence')
+                if all_stages:
+                    current_position = 0
+                    for i, stage in enumerate(all_stages):
+                        if stage.id == ticket.stage_id.id:
+                            current_position = i + 1
+                            break
+                    ticket.progress = (current_position / len(all_stages)) * 100
+                else:
+                    ticket.progress = 0
+            else:
+                ticket.progress = 0
+    
+    @api.depends('create_date', 'date_done')
+    def _compute_resolution_time(self):
+        for ticket in self:
+            if ticket.create_date and ticket.date_done:
+                delta = ticket.date_done - ticket.create_date
+                ticket.resolution_time = delta.total_seconds() / 3600  # in hours
+            else:
+                ticket.resolution_time = 0
+    
+    @api.depends('stage_id.last')
+    def _compute_is_final_stage(self):
+        for ticket in self:
+            ticket.is_final_stage = ticket.stage_id.last if ticket.stage_id else False
+    
+    def escalate_ticket(self):
+        """Escalate ticket to manager or next level"""
+        for ticket in self:
+            if not ticket.is_escalated:
+                # Find manager or escalation user
+                escalation_users = self.env['res.users'].search([
+                    ('groups_id', 'in', self.env.ref('base.group_system').id)
+                ])
+                if escalation_users:
+                    ticket.write({
+                        'user_id': escalation_users[0].id,
+                        'is_escalated': True,
+                        'escalation_date': fields.Datetime.now(),
+                        'priority': '3',  # Set to urgent
+                    })
+                    # Send notification
+                    msg = f"Ticket '{ticket.name}' has been escalated and assigned to you."
+                    ticket.notification_standard(escalation_users[0].email, ticket.email_from, msg)
     
     @api.model
-    def notification_ticket(self,user,msg=""):
-               
-        server = smtplib.SMTP('smtp.office365.com', 587)
-        server.starttls()
-        server.login("notification@bensizwe.com", "Fug42481")
+    def auto_escalate_overdue_tickets(self):
+        """Cron job to auto-escalate overdue tickets"""
+        overdue_tickets = self.search([
+            ('date_deadline', '<', fields.Datetime.now()),
+            ('is_final_stage', '=', False),
+            ('is_escalated', '=', False)
+        ])
+        for ticket in overdue_tickets:
+            ticket.escalate_ticket()
+    
+    @api.model
+    def notification_ticket(self, user, msg=""):
+        """Send notification email using Odoo's mail system instead of direct SMTP"""
+        try:
+            # Use Odoo's mail system instead of direct SMTP
+            mail_server = self.env['ir.mail_server'].sudo().search([], limit=1)
+            if not mail_server:
+                logging.warning("No mail server configured in Odoo")
+                return False
+                
+            for ticket in self:
+                if ticket.kanban_state == "normal":              
+                    logging.info("======================== Tickets consernés dans notification =============================")
+                    logging.info(ticket)
+                    logging.info("======================== user gceo =============================")
+                    logging.info(user.employee_id.name)
+                    
+                    subject = "Warning for untreated requisition"
+                    if msg == "":               
+                        body_html = f"Hi {user.employee_id.name}!<br> The system generated a ticket for an untreated requisition! This is requisition number: {ticket.expense_sheet_id or 'N/A'}"
+                    else:
+                        body_html = msg
+                    
+                    # Create mail using Odoo's mail system
+                    mail_values = {
+                        'subject': subject,
+                        'body_html': body_html,
+                        'email_to': user.employee_id.work_email,
+                        'email_from': mail_server.smtp_user or 'noreply@company.com',
+                    }
+                    
+                    mail = self.env['mail.mail'].sudo().create(mail_values)
+                    try:
+                        mail.send()
+                        logging.info(f"Email sent successfully to {user.employee_id.work_email}")
+                    except Exception as e:
+                        logging.error(f"Failed to send email: {str(e)}")
+                        
+        except Exception as e:
+            logging.error(f"Error in notification_ticket: {str(e)}")
+            return False
         
-               
-        for ticket in self:
+        return True       
+
+    def notification_standard(self, agent_concerne, createur, msg=""):
+        """Send notification email using direct SMTP"""
+        try:
+            server = smtplib.SMTP('smtp.office365.com', 587)
+            server.starttls()
+            server.login("support@bensizwe.com", "H&890601727549ow")
             
-            if ticket.kanban_state=="normal":              
+            for ticket in self:
                 logging.info("======================== Tickets consernés dans notification =============================")
                 logging.info(ticket)
-                logging.info("======================== user gceo =============================")
-                logging.info(user.employee_id.name)
-                message= MIMEMultipart('alternative')
-                message['To'] = user.employee_id.work_email
-                message['CC'] = user.employee_id.work_email
-                message['Subject'] = "warning for untreated requisition"  
-                if (msg==""):               
-                    message_texte = str("Hi "+user.employee_id.name+"!<br> the system generated a ticket, for an untreated requisition! this is requisition number:"+ticket.expense_sheet_id)
+                logging.info("======================== agent concerné =============================")
+                logging.info(agent_concerne)
+                logging.info("======================== Message du ticket =============================:")
+                logging.info(msg) 
+                logging.info("======================== Numéro du ticket =============================:")
+                logging.info(ticket.id)  
+                logging.info("======================== Message destinateurs =============================:")
+                logging.info(createur)
+                
+                message_texte = ""
+                if createur == False:
+                    createur = "arnold.bukasa1@gmail.com"
+
+                message = MIMEMultipart('alternative')
+                message['To'] = agent_concerne
+                message['CC'] = createur
+                message['Subject'] = "Ticket:/" + str(ticket.id)
+                
+                if msg == "": 
+                    if agent_concerne:
+                       message_texte = str("Hi " + agent_concerne + "!<br> the system generated a ticket number: " + str(ticket.id))
                 else:
                     message_texte = msg          
+                    
                 mt_html = MIMEText(message_texte, "html")
                 message.attach(mt_html)
-                    
-                server.sendmail("notification@bensizwe.com", user.employee_id.work_email, message.as_string())       
-
-    def notification_standard(self,agent_concerne,createur,msg=""):
-               
-        server = smtplib.SMTP('smtp.office365.com', 587)
-        server.starttls()
-        server.login("support@bensizwe.com", "S.509087353364us")
-        
-               
-        for ticket in self:
-                       
-            logging.info("======================== Tickets consernés dans notification =============================")
-            logging.info(ticket)
-            logging.info("======================== agent concerné =============================")
-            logging.info(agent_concerne)
-
-            logging.info("======================== Message du ticket =============================:")
-            logging.info(msg) 
-            logging.info("======================== Numéro du ticket =============================:")
-            logging.info(ticket.id)  
-            logging.info("======================== Message destinateurs =============================:")
-            logging.info(createur)
-            message_texte=""
-            if createur == False:
-                createur = "arnold.bukasa1@gmail.com"
-
-            message= MIMEMultipart('alternative')
-            message['To'] = agent_concerne
-            message['CC'] =createur
-            message['Subject'] = "Ticket:/"  + str(ticket.id)
-            if (msg==""): 
-                if agent_concerne:
-                   message_texte = str("Hi "+agent_concerne +"!<br> the system generated a ticket numeber! :"+str(ticket.id))
-            else:
-                message_texte = msg          
-            mt_html = MIMEText(message_texte, "html")
-            message.attach(mt_html)
                 
-            server.sendmail("support@bensizwe.com", agent_concerne, message.as_string())
+                try:
+                    server.sendmail("support@bensizwe.com", agent_concerne, message.as_string())
+                    logging.info(f"Email sent successfully to {agent_concerne}")
+                except Exception as e:
+                    logging.error(f"Failed to send email to {agent_concerne}: {str(e)}")
+            
+            server.quit()
+            
+        except Exception as e:
+            logging.error(f"Error in notification_standard: {str(e)}")
+            return False
+        
+        return True
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -175,10 +277,13 @@ class escalatorTicket(models.Model):
     def _email_parse(self, email):
         match = re.match(r"(.*) *<(.*)>", email)
         if match:
-            contact_name, email_from =  match.group(1,2)
+            contact_name, email_from = match.group(1, 2)
         else:
             match = re.match(r"(.*)@.*", email)
-            contact_name =  match.group(1)
+            if match:
+                contact_name = match.group(1)
+            else:
+                contact_name = email
             email_from = email
         return contact_name, email_from
 
@@ -186,10 +291,13 @@ class escalatorTicket(models.Model):
     def message_new(self, msg, custom_values=None):
         match = re.match(r"(.*) *<(.*)>", msg.get('from'))
         if match:
-            contact_name, email_from =  match.group(1,2)
+            contact_name, email_from = match.group(1, 2)
         else:
             match = re.match(r"(.*)@.*", msg.get('from'))
-            contact_name =  match.group(1)
+            if match:
+                contact_name = match.group(1)
+            else:
+                contact_name = msg.get('from', 'Unknown')
             email_from = msg.get('from')
 
         body = tools.html2plaintext(msg.get('body'))
@@ -232,41 +340,48 @@ class escalatorTicket(models.Model):
 
         return super(escalatorTicket, self.with_context(create_context)).message_new(msg, custom_values=defaults)
 
-    @api.model_create_single
-    def create(self, vals):
-        partner = self.env['res.partner'].browse(vals.get('partner_id'))
-        if partner:
-            vals['email_from'] = partner.email
+    @api.model_create_multi
+    def create(self, vals_list):
+        if not isinstance(vals_list, list):
+            vals_list = [vals_list]
+        
+        tickets = []
+        for vals in vals_list:
+            partner = self.env['res.partner'].browse(vals.get('partner_id'))
+            if partner:
+                vals['email_from'] = partner.email
 
-        logging.info("=============================================== vals dans create ===============================================")
-        logging.info(vals)
-        # getting date from vals and convert format if it is not in the  format "%m/%d/%Y %H:%M:%S"
-        if vals.get('date_deadline'):
-            try:
-                vals['date_deadline'] =  self._convert_date_to_server_format(vals['date_deadline'])
-            except ValueError:
-                pass        
-        context = dict(self.env.context, mail_create_nosubscribe=False)
-        res = super(escalatorTicket, self.with_context(context)).create(vals)
+            logging.info("=============================================== vals dans create ===============================================")
+            logging.info(vals)
+            # getting date from vals and convert format if it is not in the  format "%m/%d/%Y %H:%M:%S"
+            if vals.get('date_deadline'):
+                try:
+                    vals['date_deadline'] =  self._convert_date_to_server_format(vals['date_deadline'])
+                except ValueError:
+                    pass        
+            
+            context = dict(self.env.context, mail_create_nosubscribe=False)
+            res = super(escalatorTicket, self.with_context(context)).create([vals])
+            tickets.append(res)
 
-        #get the actual domain
-        domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        logging.info("=============================================== domaine actuel ===============================================")
-        logging.info(domain)
+            #get the actual domain
+            domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            logging.info("=============================================== domaine actuel ===============================================")
+            logging.info(domain)
 
-        if partner:
-            msg = f"Hi! {partner.email}, there is a new Ticket <b>'{res.name}'</b>, please click here: {domain}/my/tickets/{res.id}? to access!"
-            res.notification_standard("support@bensizwe.com", partner.email, msg)
-            logging.info("=============== envoie de notification  ===============================================")
-            logging.info(msg)
+            if partner:
+                msg = f"Hi! {partner.email}, there is a new Ticket <b>'{res.name}'</b>, please click here: {domain}/my/tickets/{res.id}? to access!"
+                res.notification_standard("support@bensizwe.com", partner.email, msg)
+                logging.info("=============== envoie de notification  ===============================================")
+                logging.info(msg)
 
-            res.message_subscribe([partner.id])
-        else:
-            if vals.get('email_from'):
-                msg = f"Hi! there is a new Ticket <b>'{res.email_from}'</b>, please click here: {domain}/my/tickets/{res.id}? to access!"
-                res.notification_standard("support@bensizwe.com", vals.get('email_from'), msg)
-
-        return res
+                res.message_subscribe([partner.id])
+            else:
+                if vals.get('email_from'):
+                    msg = f"Hi! there is a new Ticket <b>'{res.email_from}'</b>, please click here: {domain}/my/tickets/{res.id}? to access!"
+                    res.notification_standard("support@bensizwe.com", vals.get('email_from'), msg)
+        
+        return tickets[0] if len(tickets) == 1 else tickets
 
     def _convert_date_to_server_format(self, date_str):
         """
@@ -348,13 +463,13 @@ class escalatorTicket(models.Model):
             logging.info(ticket.date_deadline.date())
             logging.info(datetime.date.today())
             if ticket.date_deadline.date():
-                if ticket.date_deadline.date()==datetime.date.today():
-                    for users in self.env["res.users"].search([]):             
-                        if users.has_group("hr_expense.group_hr_expense_gceo_manager"):
-                            user=users     
+                if ticket.date_deadline.date() == datetime.date.today():
+                    for users in self.env["res.users"].search([]):
+                        if users.has_group("base.group_system"):
+                            user = users
                             vals = {
-                                    'user_id' : user.id,
-                                    }
+                                'user_id': user.id,
+                            }
                             user_changed = super(escalatorTicket, self).write(vals)
                             ticket.notification_ticket(user)
                             return user_changed
@@ -362,161 +477,14 @@ class escalatorTicket(models.Model):
                 
     @api.model_cr
     def _register_hook(self):
-        escalatorTicket.website_form = bool(self.env['ir.module.module'].
-                                           search([('name', '=', 'website_form'), ('state', '=', 'installed')]))
-        if escalatorTicket.website_form:
-            self.env['ir.model'].search([('model', '=', self._name)]).write({'website_form_access': True})
-            self.env['ir.model.fields'].formbuilder_whitelist(
-                self._name, ['name', 'description', 'date_deadline', 'priority', 'partner_id', 'user_id'])
+        # Simplified hook registration for website forms
+        try:
+            escalatorTicket.website_form = bool(self.env['ir.module.module'].
+                                               search([('name', '=', 'website_form'), ('state', '=', 'installed')]))
+        except Exception:
+            escalatorTicket.website_form = False
         pass
 
-class HrExpenseSheet(models.Model):
-    _inherit = "hr.expense.sheet"
-    
-    date_to_approve=fields.Date(string="date limite pour l'approbation du manager")
-    date_to_finace_approve=fields.Date(string="date limite pour l'approbation de finance")
-    date_to_dg_approve=fields.Date(string="date limite pour l'approbation du DG")
-    date_to_paie=fields.Date(string="date limite de paiement")
-    paiement_date=fields.Date(string="Date de paiement prevue")
-    
-    tickect_ids = fields.One2many(
-        string='tickects',
-        comodel_name='escalator_lite.ticket',
-        inverse_name='expense_sheet_id',
-    )
-    numero=fields.Char(string="Num of expense", default="/")
-        
-    @api.model
-    def notification_ticket(self,user,message_texte):
-               
-        server = smtplib.SMTP('smtp.office365.com', 587)
-        server.starttls()
-        server.login("notification@bensizwe.com", "Fug42481")
-        logging.info("======================== notification ticket =============================")
-        logging.info(self)       
-        for ticket in self:
-            logging.info("======================== user gceo =============================")
-            logging.info(user.employee_id.name)
-            message= MIMEMultipart('alternative')
-            message['To'] = user.employee_id.work_email
-            message['CC'] = user.employee_id.work_email
-            message['Subject'] = "warning for untreated Task"  
-                          
-            mt_html = MIMEText(message_texte, "html")
-            message.attach(mt_html)
-                    
-            server.sendmail("notification@bensizwe.com", user.employee_id.work_email, message.as_string())   
-    @api.model
-    def create(self, vals):
-        exp=super(HrExpenseSheet, self).create(vals)
-        if exp.numero == "/":
-            seq  = self.env['ir.sequence'].get('expense.sequence') or '/'
-            exp.write({'application_no': seq})
-            
-        return exp
-    @api.multi
-    def write(self, vals):
-        if "state" in vals:
-            for hexpense in self:
-                if vals['state'] == 'submit':
-                    hexpense.date_to_approve=datetime.date.today()+datetime.timedelta(days=1)
-                elif vals['state'] == 'approve':
-                    hexpense.date_to_finace_approve=datetime.date.today()+datetime.timedelta(days=1)
-                elif vals['state'] == 'approve1':
-                    hexpense.date_to_dg_approve=datetime.date.today()+datetime.timedelta(days=1)
-                elif vals['state'] == 'approve2':
-                    if hexpense.paiement_date:
-                        hexpense.date_to_paie=hexpense.paiement_date
-                    else:
-                        hexpense.date_to_paie=datetime.date.today()+datetime.timedelta(days=1)
-                        
-        res = super(HrExpenseSheet, self).write(vals)
-                        
-    @api.multi
-    def _ticket_generator(self):
-        logging.info("=======je suis dans la racine du generateur des tickets======")
-        logging.info(self)
-        for users in self.env["res.users"].search([]):             
-            if users.has_group("hrms_dashboard.group_hrms_dashboard_dg"):
-                user=users
-                for expense in self.env["hr.expense.sheet"].search([]):
-                    
-                    logging.info("=======je suis dans le generateur des tickets======")
-                    logging.info(expense)
-                    
-                    if expense.state=="submit":
-                        logging.info("=======generateur des tickets: verification des etats (submit)======")
-                        logging.info(expense.state)
-                        logging.info("=======comparaison des dates======")
-                        logging.info(expense.date_to_approve==datetime.date.today()-datetime.timedelta(days=1))
-                        logging.info(expense.date_to_approve)
-                        logging.info(datetime.date.today()-datetime.timedelta(days=1))
-                        if expense.date_to_approve==datetime.datetime.today()-datetime.timedelta(days=1):
-                            vals={
-                                "name":"warning, for an untreated requisition",
-                                "description":"the agent has submitted a requisition for more than 24 hours, he is waiting for the manager's approval, this is the requisition number:"+expense.numero,
-                                "employee_id":expense.employee_id.id,
-                                "user_id":user.id,
-                                "date_deadline":datetime.date.today()+datetime.timedelta(days=1),
-                                "expense_sheet_id":expense.id,
-                                "color":3,
-                                }
-                            self.env["escalator_lite.ticket"].create(vals)
-                            message_texte=str("Hi "+user.employee_id.name+"!<br> the system generated a ticket, for an untreated requisition!(need line approval),this is the requisition number:"+expense.numero)
-                            logging.info("=======ticket à notifier======")
-                            logging.info(expense)                             
-                            expense.notification_ticket(user,message_texte)
-                              
-                    if expense.state=="approve":
-                            logging.info("=======generateur des tickets: verification des etats (approve)======")
-                            logging.info(expense.state)
-                            logging.info("=======comparaison des dates======")
-                            logging.info(expense.date_to_approve==datetime.date.today()-datetime.timedelta(days=1))
-                            logging.info(expense.date_to_approve)
-                            logging.info(datetime.date.today()-datetime.timedelta(days=1))
-                                
-                            if expense.date_to_approve==datetime.date.today()-datetime.timedelta(days=1):
-                                vals={
-                                    "name":"warning, for an untreated requisition",
-                                    "description":"the manager has approved a requisition for more than 24 hours, he is waiting for the finance approval, this is the requisition number:"+expense.numero,
-                                    "employee_id":expense.employee_id.id,
-                                    "user_id":user.id,
-                                    "date_deadline":datetime.date.today()+datetime.timedelta(days=1),
-                                    "expense_sheet_id":expense.id,
-                                    "color":5,
-                                }
-                                self.env["escalator_lite.ticket"].create(vals)
-                                message_texte=str("Hi "+user.employee_id.name+"!<br> the system generated a ticket, for an untreated requisition!(need finance approval), this is the requisition number:"+expense.numero)
-                                logging.info("=======ticket à notifier======")
-                                logging.info(self)
-                                logging.info("=======ticket à notifier======")
-                                logging.info(expense)                             
-                                expense.notification_ticket(user,message_texte)
-                    if expense.state=="approve1":
-                            logging.info("=======generateur des tickets: verification des etats (approve1)======")
-                            logging.info(expense.state)
-                            logging.info("=======comparaison des dates======")
-                            logging.info(expense.date_to_approve==datetime.date.today()-datetime.timedelta(days=1))
-                            logging.info(expense.date_to_approve)
-                            logging.info(datetime.date.today()-datetime.timedelta(days=1))
-                                
-                            if expense.date_to_approve==datetime.date.today()-datetime.timedelta(days=1):
-                                vals={
-                                    "name":"warning, for an untreated requisition",
-                                    "description":"finance approved, resuisition 24 hours ago, it is still pending MD approval, this is the requisition number:"+expense.numero,
-                                    "employee_id":expense.employee_id.id,
-                                    "user_id":user.id,
-                                    "date_deadline":datetime.date.today()+datetime.timedelta(days=1),
-                                    "expense_sheet_id":expense.id,
-                                    "color":4,
-                                }
-                                self.env["escalator_lite.ticket"].create(vals)
-                                message_texte=str("Hi "+user.employee_id.name+"!<br> the system generated a ticket, for an untreated requisition!(need your approval), this is the requisition number:"+expense.numero)
-                                logging.info("=======ticket à notifier======")
-                                logging.info(self) 
-                                logging.info("=======ticket à notifier======")
-                                logging.info(expense)                             
-                                expense.notification_ticket(user,message_texte)
 class Task(models.Model):
     _inherit = "project.task"
     

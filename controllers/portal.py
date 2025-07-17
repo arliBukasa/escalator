@@ -2,14 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
+import json
 
 from odoo import http, _
-from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.portal.controllers.portal import CustomerPortal as BaseCustomerPortal
 from odoo.http import request
 from odoo.osv.expression import OR
 
 
-class CustomerPortal(CustomerPortal):
+class CustomerPortal(BaseCustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(CustomerPortal, self)._prepare_portal_layout_values()
@@ -32,23 +33,27 @@ class CustomerPortal(CustomerPortal):
             'stage': {'label': _('Stage'), 'order': 'stage_id'},
 #            'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc'},
         }
-        # searchbar_filters = {
-        #     'all': {'label': _('All'), 'domain': []},
-        #     'open': {'label': _('Opened'), 'domain': [('stage_id.code', '=', 'open')]},
-        #     'wait': {'label': _('Wait for user'), 'domain': [('stage_id.code', '=', 'wait')]},
-        #     'close': {'label': _('Closed'), 'domain': [('stage_id.code', '=', 'close')]},
-        # }
+        searchbar_filters = {
+            'all': {'label': _('All'), 'domain': []},
+            'open': {'label': _('In Progress'), 'domain': [('is_final_stage', '=', False)]},
+            'closed': {'label': _('Closed'), 'domain': [('is_final_stage', '=', True)]},
+            'urgent': {'label': _('Urgent'), 'domain': [('priority', '=', '3')]},
+            'high': {'label': _('High Priority'), 'domain': [('priority', '=', '2')]},
+            'my': {'label': _('Assigned to me'), 'domain': [('user_id', '=', request.env.user.id)]},
+        }
         searchbar_inputs = {
             'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
             'message': {'input': 'message', 'label': _('Search in Messages')},
-#            'customer': {'input': 'customer', 'label': _('Search in Customer')},
-#             'stage': {'input': 'stage', 'label': _('Search in Stages')},
+            'customer': {'input': 'customer', 'label': _('Search in Customer')},
+            'stage': {'input': 'stage', 'label': _('Search in Stages')},
             'all': {'input': 'all', 'label': _('Search in All')},
         }
-        # searchbar_groupby = {
-        #     'none': {'input': 'none', 'label': _('None1')},
-        #     'stage': {'input': 'stage', 'label': _('Stage')},
-        # }
+        searchbar_groupby = {
+            'none': {'input': 'none', 'label': _('None')},
+            'stage': {'input': 'stage', 'label': _('Stage')},
+            'priority': {'input': 'priority', 'label': _('Priority')},
+            'user': {'input': 'user', 'label': _('Assigned User')},
+        }
 
         domain = ([])
 
@@ -57,9 +62,9 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
         # default filter by value
-        # if not filterby:
-        #     filterby = 'wait'
-        # domain += searchbar_filters[filterby]['domain']
+        if not filterby:
+            filterby = 'all'
+        domain += searchbar_filters[filterby]['domain']
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('escalator_lite.ticket', domain)
@@ -93,23 +98,22 @@ class CustomerPortal(CustomerPortal):
         escalator_ticket = request.env['escalator_lite.ticket'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
 
         values.update({
-            # 'date': date_begin,
-            # 'date_end': date_end,
+            'date_begin': date_begin,
+            'date_end': date_end,
             'tickets': escalator_ticket,
             'page_name': 'ticket',
-            # 'archive_groups': archive_groups,
+            'archive_groups': archive_groups,
             'default_url': '/my/tickets',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
-            # 'searchbar_groupby': searchbar_groupby,
+            'searchbar_groupby': searchbar_groupby,
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
-            # 'new': escalatorTicket.website_form
-
-            # 'groupby': groupby,
-            # 'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
-            # 'filterby': filterby,
+            'search': search,
+            'groupby': groupby,
+            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'filterby': filterby,
         })
         return request.render("escalator.portal_my_tickets", values)
 
@@ -142,4 +146,90 @@ class CustomerPortal(CustomerPortal):
             }
 
         return request.render("escalator.new_ticket", vals)
+
+    @http.route(['/escalator/close/<int:ticket_id>'], type='http', auth="user", website=True)
+    def ticket_close(self, ticket_id=None, **kw):
+        """Close a ticket by moving it to the last stage"""
+        ticket = request.env['escalator_lite.ticket'].browse(ticket_id)
+        if ticket.exists():
+            last_stage = request.env['escalator_lite.stage'].search([('last', '=', True)], limit=1)
+            if last_stage:
+                ticket.write({'stage_id': last_stage.id})
+        return request.redirect('/my/tickets')
+
+    @http.route(['/escalator/assign/<int:ticket_id>'], type='http', auth="user", website=True)
+    def ticket_assign(self, ticket_id=None, **kw):
+        """Assign a ticket to current user"""
+        ticket = request.env['escalator_lite.ticket'].browse(ticket_id)
+        if ticket.exists():
+            ticket.write({'user_id': request.env.user.id})
+        return request.redirect('/my/tickets')
+
+    @http.route(['/my/tickets/stats'], type='http', auth="user", website=True)
+    def my_tickets_stats(self, **kw):
+        """Display ticket statistics for the current user"""
+        domain = []
+        total_tickets = request.env['escalator_lite.ticket'].search_count(domain)
+        open_tickets = request.env['escalator_lite.ticket'].search_count([('is_final_stage', '=', False)])
+        closed_tickets = request.env['escalator_lite.ticket'].search_count([('is_final_stage', '=', True)])
+        my_tickets = request.env['escalator_lite.ticket'].search_count([('user_id', '=', request.env.user.id)])
+        urgent_tickets = request.env['escalator_lite.ticket'].search_count([('priority', '=', '3')])
+
+        values = {
+            'page_name': 'ticket_stats',
+            'total_tickets': total_tickets,
+            'open_tickets': open_tickets,
+            'closed_tickets': closed_tickets,
+            'my_tickets': my_tickets,
+            'urgent_tickets': urgent_tickets,
+        }
+        return request.render("escalator.portal_ticket_stats", values)
+
+    @http.route(['/escalator/submit'], type='http', auth="public", website=True, csrf=False, methods=['POST'])
+    def ticket_submit(self, **post):
+        """Handle ticket form submission and return JSON response"""
+        try:
+            # Clean the form data
+            vals = {}
+            for field_name in ['name', 'description', 'email_from', 'contact_name', 'priority', 'date_deadline']:
+                if post.get(field_name):
+                    vals[field_name] = post[field_name]
+            
+            # Set default priority if not provided
+            if 'priority' not in vals:
+                vals['priority'] = '1'
+            
+            # Create the ticket
+            ticket = request.env['escalator_lite.ticket'].sudo().create(vals)
+            
+            # Prepare success response
+            response_data = {
+                'result': 'success',
+                'ticket_id': ticket.id,
+                'message': 'Your ticket has been created successfully!',
+                'redirect': '/my/tickets' if request.session.uid else '/'
+            }
+            
+            # Return JSON response
+            return request.make_response(
+                json.dumps(response_data),
+                headers=[('Content-Type', 'application/json')]
+            )
+            
+        except Exception as e:
+            # Log the error
+            import logging
+            _logger = logging.getLogger(__name__)
+            _logger.error(f"Error creating ticket: {str(e)}")
+            
+            # Return error response
+            error_data = {
+                'result': 'error',
+                'message': 'An error occurred while creating your ticket. Please try again.'
+            }
+            
+            return request.make_response(
+                json.dumps(error_data),
+                headers=[('Content-Type', 'application/json')]
+            )
 

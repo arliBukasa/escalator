@@ -17,9 +17,10 @@
         'views/escalator_tickets.xml',
         'views/escalator_team_views.xml',
         'views/escalator_stage_views.xml',
+        'views/escalator_category_views.xml',
         'views/escalator_data.xml',
         'views/escalator_templates.xml',
-
+        'data/escalator_cron.xml',
     ],
     'demo': [
         'demo/escalator_demo.xml',
