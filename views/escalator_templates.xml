@@ -222,7 +222,8 @@
                                     <div class="o_website_form_datetime input-group datetime" id="datepicker5"
                                          data-target-input="nearest">
                                         <input class="form-control datetimepicker-input o_website_form_input"
-                                               data-target="#datepicker5" name="date_deadline" type="text"/>
+                                               data-target="#datepicker5" name="date_deadline" type="text"
+                                               placeholder="YYYY-MM-DD"/>
                                         <div class="input-group-append" data-target="#datepicker5"
                                              data-toggle="datetimepicker">
                                             <div class="input-group-text">
@@ -312,9 +313,16 @@
                     var ajax = require('web.ajax');
                     
                     $(document).ready(function() {
+                        // Configuration du datepicker avec format fixe
+                        if (typeof moment !== 'undefined') {
+                            $('#datepicker5').datetimepicker({
+                                format: 'YYYY-MM-DD',
+                                locale: 'en',
+                                useCurrent: false
+                            });
+                        }
+                        
                         $('form.s_website_form').on('submit', function(e) {
-                            e.preventDefault();
-                            
                             var $form = $(this);
                             var $button = $form.find('.o_website_form_send');
                             
@@ -322,8 +330,20 @@
                             $button.prop('disabled', true);
                             $button.text('Sending...');
                             
-                            // Envoyer le formulaire
-                            $form.off('submit').submit();
+                            // Valider le format de date avant envoi
+                            var dateInput = $form.find('input[name="date_deadline"]');
+                            if (dateInput.val()) {
+                                var dateValue = dateInput.val();
+                                // Vérifier que la date est au format YYYY-MM-DD
+                                var dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                                if (!dateRegex.test(dateValue)) {
+                                    alert('Please enter the date in YYYY-MM-DD format');
+                                    $button.prop('disabled', false);
+                                    $button.text('Send');
+                                    e.preventDefault();
+                                    return false;
+                                }
+                            }
                         });
                     });
                 });
