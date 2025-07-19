@@ -2,7 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-
+import smtplib
+import logging
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import re
+from odoo.exceptions import AccessError
+import datetime
+import pytz
 
 
 class Stage(models.Model):
@@ -81,9 +88,13 @@ class HrExpenseSheet(models.Model):
         if "state" in vals:
             for hexpense in self:
                 if vals['state'] == 'submit':
+                    logging.info("=======je suis dans le write de l'etat submit======")
                     hexpense.date_to_approve=datetime.date.today()+datetime.timedelta(days=1)
+                    logging.info(hexpense.date_to_approve)
                 elif vals['state'] == 'approve':
+                    logging.info("=======je suis dans le write de l'etat aprove======")
                     hexpense.date_to_finace_approve=datetime.date.today()+datetime.timedelta(days=1)
+                    logging.info(hexpense.date_to_approve)
                 elif vals['state'] == 'approve1':
                     hexpense.date_to_dg_approve=datetime.date.today()+datetime.timedelta(days=1)
                 elif vals['state'] == 'approve2':
