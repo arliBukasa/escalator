@@ -151,6 +151,7 @@ class escalatorTicket(models.Model):
             mail_server = self.env['ir.mail_server'].sudo().search([], limit=1)
             if not mail_server:
                 logging.warning("No mail server configured in Odoo")
+
                 return False
                 
             for ticket in self:
@@ -176,7 +177,7 @@ class escalatorTicket(models.Model):
                     
                     mail = self.env['mail.mail'].sudo().create(mail_values)
                     try:
-                        mail.send()
+                        #mail.send()
                         logging.info(f"Email sent successfully to {user.employee_id.work_email}")
                     except Exception as e:
                         logging.error(f"Failed to send email: {str(e)}")
@@ -188,14 +189,14 @@ class escalatorTicket(models.Model):
         return True       
 
     def notification_standard(self, agent_concerne, createur, msg=""):
-        """Send notification email using direct SMTP"""
+        """Send notification email using direct SMTP with improved From header"""
         try:
             server = smtplib.SMTP('smtp.office365.com', 587)
             server.starttls()
             server.login("support@bensizwe.com", "H&890601727549ow")
             
             for ticket in self:
-                logging.info("======================== Tickets consernés dans notification =============================")
+                logging.info("======================== Tickets concernés dans notification =============================")
                 logging.info(ticket)
                 logging.info("======================== agent concerné =============================")
                 logging.info(agent_concerne)
@@ -211,6 +212,7 @@ class escalatorTicket(models.Model):
                     createur = "arnold.bukasa1@gmail.com"
 
                 message = MIMEMultipart('alternative')
+                message['From'] = "support@bensizwe.com"  # IMPORTANT: Ajouter From
                 message['To'] = agent_concerne
                 message['CC'] = createur
                 message['Subject'] = "Ticket:/" + str(ticket.id)
@@ -231,6 +233,7 @@ class escalatorTicket(models.Model):
                     logging.error(f"Failed to send email to {agent_concerne}: {str(e)}")
             
             server.quit()
+            logging.info("======================== Email envoyé avec succès =============================")
             
         except Exception as e:
             logging.error(f"Error in notification_standard: {str(e)}")
@@ -409,14 +412,16 @@ class escalatorTicket(models.Model):
 
     @api.multi
     def write(self, vals):
+        # Capturer l'ancien assigné avant modification
+        old_user_id = self.user_id.id if self.user_id else False
+        
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             # call notification_standard() to send message that stage changed
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
             
-            # envoie d'une notification standard pour  changement d'etat du ticket
-             
+            # envoie d'une notification standard pour changement d'etat du ticket
             stage = self.env['escalator_lite.stage'].browse(vals['stage_id'])
             logging.info("=======stage======")
             logging.info(stage)
@@ -424,16 +429,53 @@ class escalatorTicket(models.Model):
             logging.info(stage.name)
 
             if 'kanban_state' in vals:
-                message_texte=str("Hi !<br>your ticket : <b>'"+str(self.name)+"'</b> ,  has been updated the actual stage is: '"+str(stage.name)+"'")
-
-                self.notification_standard(self.email_from,self.user_id.partner_id.email,message_texte)
+                message_texte = str("Hi !<br>your ticket : <b>'" + str(self.name) + "'</b> ,  has been updated the actual stage is: '" + str(stage.name) + "'")
+                self.notification_standard(self.email_from, self.user_id.partner_id.email if self.user_id else "support@bensizwe.com", message_texte)
             
             if stage.last:
                 vals.update({'date_done': fields.Datetime.now()})
             else:
                 vals.update({'date_done': False})
 
-        return super(escalatorTicket, self).write(vals)
+        # User assignment change: send notifications
+        if 'user_id' in vals:
+            new_user_id = vals['user_id']
+            
+            # Si l'assignation change vraiment
+            if old_user_id != new_user_id:
+                result = super(escalatorTicket, self).write(vals)
+                
+                # Récupérer les utilisateurs
+                old_user = self.env['res.users'].browse(old_user_id) if old_user_id else None
+                new_user = self.env['res.users'].browse(new_user_id) if new_user_id else None
+                
+                # Notification au nouvel assigné
+                if new_user and new_user.email:
+                    message_new = f"Hi {new_user.name}!<br>You have been assigned the ticket <b>'{self.name}'</b> (#{self.id}).<br>Priority: {dict(AVAILABLE_PRIORITIES).get(self.priority, 'Normal')}<br>Deadline: {self.date_deadline or 'Not set'}"
+                    self.notification_standard(new_user.email, self.email_from or "support@bensizwe.com", message_new)
+                
+                # Notification au client/rapporteur
+                if self.email_from:
+                    domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                    if new_user:
+                        message_customer = f"Hi!<br>Your ticket <b>'{self.name}'</b> (#{self.id}) has been assigned to {new_user.name}.<br>You can track its progress here: {domain}/my/tickets/{self.id}"
+                    else:
+                        message_customer = f"Hi!<br>Your ticket <b>'{self.name}'</b> (#{self.id}) has been unassigned.<br>You can track its progress here: {domain}/my/tickets/{self.id}"
+                    self.notification_standard(self.email_from, new_user.email if new_user else "support@bensizwe.com", message_customer)
+                
+                # Notification à l'ancien assigné s'il y en avait un
+                if old_user and old_user.email:
+                    if new_user:
+                        message_old = f"Hi {old_user.name}!<br>The ticket <b>'{self.name}'</b> (#{self.id}) has been reassigned from you to {new_user.name}."
+                    else:
+                        message_old = f"Hi {old_user.name}!<br>The ticket <b>'{self.name}'</b> (#{self.id}) has been unassigned from you."
+                    self.notification_standard(old_user.email, new_user.email if new_user else "support@bensizwe.com", message_old)
+                
+                return result
+            else:
+                return super(escalatorTicket, self).write(vals)
+        else:
+            return super(escalatorTicket, self).write(vals)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -446,12 +488,76 @@ class escalatorTicket(models.Model):
 
     @api.multi
     def takeit(self):
+        """Assign ticket to current user and send notification"""
         self.ensure_one()
+        old_user = self.user_id
+        
         vals = {
-            'user_id' : self.env.uid,
+            'user_id': self.env.uid,
             # 'team_id': self.env['escalator_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid).id
         }
-        return super(escalatorTicket, self).write(vals)
+        
+        result = super(escalatorTicket, self).write(vals)
+        
+        # Send notification if user changed
+        if old_user.id != self.env.uid:
+            current_user = self.env.user
+            
+            # Notification to the new assignee (current user)
+            if current_user.email:
+                message_self = f"Hi {current_user.name}!<br>You have taken the ticket <b>'{self.name}'</b> (#{self.id}).<br>Priority: {dict(AVAILABLE_PRIORITIES).get(self.priority, 'Normal')}<br>Deadline: {self.date_deadline or 'Not set'}"
+                self.notification_standard(current_user.email, self.email_from or "support@bensizwe.com", message_self)
+            
+            # Notification to the customer/reporter
+            if self.email_from:
+                domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                message_customer = f"Hi!<br>Your ticket <b>'{self.name}'</b> (#{self.id}) has been assigned to {current_user.name}.<br>You can track its progress here: {domain}/my/tickets/{self.id}"
+                self.notification_standard(self.email_from, current_user.email, message_customer)
+            
+            # Notification to the previous assignee if there was one
+            if old_user and old_user.email and old_user.id != self.env.uid:
+                message_old = f"Hi {old_user.name}!<br>The ticket <b>'{self.name}'</b> (#{self.id}) has been reassigned from you to {current_user.name}."
+                self.notification_standard(old_user.email, current_user.email, message_old)
+        
+        return result
+    
+    @api.multi
+    def assign_to_me(self):
+        """Alternative method to assign ticket to current user"""
+        return self.takeit()
+    
+    @api.multi
+    def assign_to_user(self, user_id):
+        """Assign ticket to specific user with notifications"""
+        self.ensure_one()
+        old_user = self.user_id
+        new_user = self.env['res.users'].browse(user_id)
+        
+        if not new_user:
+            return False
+        
+        vals = {'user_id': user_id}
+        result = super(escalatorTicket, self).write(vals)
+        
+        # Send notifications
+        if old_user.id != user_id:
+            # Notification to the new assignee
+            if new_user.email:
+                message_new = f"Hi {new_user.name}!<br>You have been assigned the ticket <b>'{self.name}'</b> (#{self.id}).<br>Priority: {dict(AVAILABLE_PRIORITIES).get(self.priority, 'Normal')}<br>Deadline: {self.date_deadline or 'Not set'}"
+                self.notification_standard(new_user.email, self.email_from or "support@bensizwe.com", message_new)
+            
+            # Notification to the customer/reporter
+            if self.email_from:
+                domain = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                message_customer = f"Hi!<br>Your ticket <b>'{self.name}'</b> (#{self.id}) has been assigned to {new_user.name}.<br>You can track its progress here: {domain}/my/tickets/{self.id}"
+                self.notification_standard(self.email_from, new_user.email, message_customer)
+            
+            # Notification to the previous assignee if there was one
+            if old_user and old_user.email:
+                message_old = f"Hi {old_user.name}!<br>The ticket <b>'{self.name}'</b> (#{self.id}) has been reassigned from you to {new_user.name}."
+                self.notification_standard(old_user.email, new_user.email, message_old)
+        
+        return result
     @api.multi
     def ticket_escalled(self):
         
