@@ -131,7 +131,6 @@ class TicketInheritSLA(models.Model):
         body = f"Ticket {self.name} has violated the resolution SLA of {sla.resolution_time} hours."
         self.message_post(subject=subject, body=body, subtype='mail.mt_comment')
     
-    @api.multi
     def write(self, vals):
         # Track first response
         if 'stage_id' in vals and not self.date_first_response:

@@ -109,7 +109,6 @@ class HrExpenseSheet(models.Model):
                         
         res = super(HrExpenseSheet, self).write(vals)
                         
-    @api.multi
     def _ticket_generator(self):
         logging.info("=======je suis dans la racine du generateur des tickets======")
         logging.info(self)

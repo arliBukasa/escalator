@@ -257,7 +257,6 @@ class EscalatorTicket(models.Model):
         """
         self.email_from = self.partner_id.email
 
-    @api.multi
     def copy(self, default=None):
         if default is None:
             default = {}
@@ -271,7 +270,6 @@ class EscalatorTicket(models.Model):
             return False
         return True
 
-    @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(escalatorTicket, self).message_get_suggested_recipients()
         try:
@@ -420,7 +418,6 @@ class EscalatorTicket(models.Model):
                 continue  # Try the next format
         raise ValueError(f"Date format not recognized: {date_str}")
 
-    @api.multi
     def write(self, vals):
         # Capturer l'ancien assigné avant modification
         old_user_id = self.user_id.id if self.user_id else False
@@ -496,7 +493,6 @@ class EscalatorTicket(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
-    @api.multi
     def takeit(self):
         """Assign ticket to current user and send notification"""
         self.ensure_one()
@@ -531,12 +527,10 @@ class EscalatorTicket(models.Model):
         
         return result
     
-    @api.multi
     def assign_to_me(self):
         """Alternative method to assign ticket to current user"""
         return self.takeit()
     
-    @api.multi
     def assign_to_user(self, user_id):
         """Assign ticket to specific user with notifications"""
         self.ensure_one()
@@ -568,7 +562,6 @@ class EscalatorTicket(models.Model):
                 self.notification_standard(old_user.email, new_user.email, message_old)
         
         return result
-    @api.multi
     def ticket_escalled(self):
         
         for ticket in self.env["escalator_lite.ticket"].search([]):
@@ -586,17 +579,16 @@ class EscalatorTicket(models.Model):
                             vals = {
                                 'user_id': user.id,
                             }
-                            user_changed = super(escalatorTicket, self).write(vals)
+                            user_changed = super().write(vals)
                             ticket.notification_ticket(user)
                             return user_changed
-                           
                 
-    @api.model_cr
+    @api.model
     def _register_hook(self):
         # Simplified hook registration for website forms
         try:
-            escalatorTicket.website_form = bool(self.env['ir.module.module'].
-                                               search([('name', '=', 'website_form'), ('state', '=', 'installed')]))
+            self.env['ir.module.module'].search([('name', '=', 'website_form'), ('state', '=', 'installed')])
+            escalatorTicket.website_form = True
         except Exception:
             escalatorTicket.website_form = False
         pass
