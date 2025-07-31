@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 import smtplib
 import logging
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import re
-from odoo.exceptions import AccessError
-import datetime
+from odoo.exceptions import AccessError, UserError, ValidationError
+from datetime import datetime, timedelta
 import pytz
 
 
@@ -17,7 +17,8 @@ class Stage(models.Model):
         management flow. Tickets will now use only stages, instead of state and stages.
         Stages are for example used to display the kanban view of records.
     """
-    _name = "escalator_lite.stage"
+    _name = "escalator.stage"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Stage of case"
     _rec_name = 'name'
     _order = "sequence, name, id"
@@ -55,48 +56,51 @@ class HrExpenseSheet(models.Model):
     )
     numero=fields.Char(string="Num of expense", default="/")
         
-    @api.model
-    def notification_ticket(self,user,message_texte):
-               
-        server = smtplib.SMTP('smtp.office365.com', 587)
-        server.starttls()
-        server.login("notification@bensizwe.com", "Fug42481")
-        logging.info("======================== notification ticket =============================")
-        logging.info(self)       
-        for ticket in self:
-            logging.info("======================== user gceo =============================")
-            logging.info(user.employee_id.name)
-            message= MIMEMultipart('alternative')
-            message['To'] = user.employee_id.work_email
-            message['CC'] = user.employee_id.work_email
-            message['Subject'] = "warning for untreated Task"  
-                          
-            mt_html = MIMEText(message_texte, "html")
-            message.attach(mt_html)
-                    
-            server.sendmail("notification@bensizwe.com", user.employee_id.work_email, message.as_string())   
+    def notification_ticket(self, user, message_texte):
+        """Send notification email to user
+        
+        Args:
+            user (res.users): User to notify
+            message_texte (str): HTML message content
+        """
+        try:
+            # Use Odoo mail.mail for better email handling
+            mail_values = {
+                'subject': _("Warning for Untreated Task"),
+                'email_to': user.employee_id.work_email,
+                'email_cc': user.employee_id.work_email,
+                'body_html': message_texte,
+                'email_from': self.env['ir.mail_server'].sudo()._get_default_from_address() or 'notifications@example.com',
+            }
+            self.env['mail.mail'].sudo().create(mail_values).send()
+            
+            _logger.info("Notification sent to %s", user.employee_id.name)
+            
+        except Exception as e:
+            _logger.error("Failed to send notification email: %s", str(e), exc_info=True)
+            raise UserError(_("Failed to send notification email: %s") % str(e))
     @api.model
     def create(self, vals):
-        exp=super(HrExpenseSheet, self).create(vals)
-        if exp.numero == "/":
-            seq  = self.env['ir.sequence'].get('expense.sequence') or '/'
-            exp.write({'application_no': seq})
-            
-        return exp
-    @api.multi
+        # Set default sequence if not provided
+        if vals.get('numero', '/') == '/':
+            vals['numero'] = self.env['ir.sequence'].next_by_code('expense.sequence') or '/'
+        
+        # Call super with updated values
+        expense = super(HrExpenseSheet, self).create(vals)
+        return expense
+
     def write(self, vals):
         if "state" in vals:
+            today = fields.Date.context_today(self)
             for hexpense in self:
                 if vals['state'] == 'submit':
-                    logging.info("=======je suis dans le write de l'etat submit======")
-                    hexpense.date_to_approve=datetime.date.today()+datetime.timedelta(days=1)
-                    logging.info(hexpense.date_to_approve)
+                    _logger.debug("Processing state change to 'submit'")
+                    hexpense.date_to_approve = today + timedelta(days=1)
                 elif vals['state'] == 'approve':
-                    logging.info("=======je suis dans le write de l'etat aprove======")
-                    hexpense.date_to_finace_approve=datetime.date.today()+datetime.timedelta(days=1)
-                    logging.info(hexpense.date_to_approve)
+                    _logger.debug("Processing state change to 'approve'")
+                    hexpense.date_to_finace_approve = today + timedelta(days=1)
                 elif vals['state'] == 'approve1':
-                    hexpense.date_to_dg_approve=datetime.date.today()+datetime.timedelta(days=1)
+                    hexpense.date_to_dg_approve = today + timedelta(days=1)
                 elif vals['state'] == 'approve2':
                     if hexpense.paiement_date:
                         hexpense.date_to_paie=hexpense.paiement_date
