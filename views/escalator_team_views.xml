@@ -1,53 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <!-- Team Search View -->
+    <record id="escalator_team_search" model="ir.ui.view">
+        <field name="name">escalator.team.search</field>
+        <field name="model">escalator.team</field>
+        <field name="arch" type="xml">
+            <search string="Escalator Teams">
+                <searchpanel>
+                    <field name="user_id" string="Team Leader"/>
+                    <field name="member_ids" string="Team Members"/>
+                </searchpanel>
+                
+                <field name="name" string="Team Name"/>
+                
+                <filter string="My Teams" 
+                       name="my_teams" 
+                       domain="['|', ('member_ids', 'in', user.ids), ('user_id', '=', user.id)]"/>
+                
+                <filter string="Archived" 
+                       name="archived" 
+                       domain="[('active', '=', False)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Team Leader" 
+                           name="group_by_leader" 
+                           context="{'group_by': 'user_id'}"/>
+                    <filter string="Company" 
+                           name="group_by_company" 
+                           context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
-        <!-- Cateamions Search view -->
-        <record id="support_team_search" model="ir.ui.view">
-            <field name="name">Case Teams - Search</field>
-            <field name="model">escalator_lite.team</field>
-            <field name="arch" type="xml">
-                <search string="Supportteams Search">
-                    <filter name="personal" string="My Teams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <field name="name"/>
-                    <field name="user_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Team Leader" name="leader" context="{'group_by':'user_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
+    <!-- Team Action -->
+    <record id="escalator_team_action" model="ir.actions.act_window">
+        <field name="name">Escalator Teams</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">escalator.team</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first team
+            </p><p>
+                Define teams to organize your support operations. Each team will have its own tickets and members.
+            </p>
+        </field>
+    </record>
 
-        <!-- Case Teams Action -->
-        <record id="support_team_dashboard_action" model="ir.actions.act_window">
-            <field name="name">Dashboard</field>
-            <field name="res_model">escalator_lite.team</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="context">{}</field>
-            <field name="view_id" ref="support_team_search"/>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to define a new support team.
-                </p><p>
-                    Use support team to organize your different engineers or
-                    departments into separate teams. Each team will work in
-                    its own list of tickets.
-                </p>
-            </field>
-        </record>
-
-        <!-- Case Teams Form View -->
-
-         <record id="support_team_view_form" model="ir.ui.view">
-            <field name="name">escalator_lite.team.form</field>
-            <field name="model">escalator_lite.team</field>
-            <field name="arch" type="xml">
-                <form string="Support Team">
-                    <sheet>
-                      <div class="oe_button_box" name="button_box">
+    <!-- Team Form View -->
+    <record id="escalator_team_view_form" model="ir.ui.view">
+        <field name="name">escalator.team.form</field>
+        <field name="model">escalator.team</field>
+        <field name="arch" type="xml">
+            <form string="Escalator Team">
+                <header>
+                    <button name="%(escalator.escalator_ticket_action)d" 
+                            type="action" 
+                            class="oe_highlight"
+                            string="View Tickets"
+                            attrs="{'invisible': [('id', '=', False)]}"/>
+                    <field name="active" invisible="1"/>
+                    <button name="toggle_active" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-archive"
+                            attrs="{'invisible': [('active', '=', False)]}">
+                        <field string="Archive" name="active" widget="boolean_button" 
+                               options="{'terminology': {'string_true': 'Archive', 'string_false': 'Unarchive'}}"/>
+                    </button>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>

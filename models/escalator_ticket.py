@@ -16,10 +16,10 @@ AVAILABLE_PRIORITIES = [
 ]
 
 
-class escalatorTicket(models.Model):
-    _name = "escalator_lite.ticket"
-    _description = "escalator Tickets"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+class EscalatorTicket(models.Model):
+    _name = "escalator.ticket"
+    _description = "Escalator Ticket"
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin', 'utm.mixin']
     _order = "priority desc, create_date desc"
     _mail_post_access = 'read'
 
@@ -27,42 +27,52 @@ class escalatorTicket(models.Model):
     def _get_default_stage_id(self):
         return self.env['escalator_lite.stage'].search([], order='sequence', limit=1)
 
-    name = fields.Char(string='Ticket', track_visibility='always', required=True)
-    description = fields.Html('Private Note')
-    partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', index=True)
+    name = fields.Char(string='Ticket', tracking=True, required=True)
+    description = fields.Html('Private Note', sanitize=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', tracking=True, index=True)
     commercial_partner_id = fields.Many2one(
         related='partner_id.commercial_partner_id', string='Customer Company', store=True, index=True)
-    contact_name = fields.Char('Contact Name', track_visibility='onchange')
-    email_from = fields.Char('Email', help="Email address of the contact", index=True, track_visibility='onchange')
-    user_id = fields.Many2one('res.users', string='Assigned to', track_visibility='onchange', index=True, default=False)
-    team_id = fields.Many2one('escalator_lite.team', string='Support Team', track_visibility='onchange',
-        default=lambda self: self.env['escalator_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+    contact_name = fields.Char('Contact Name', tracking=True)
+    email_from = fields.Char('Email', help="Email address of the contact", index=True, tracking=True)
+    user_id = fields.Many2one('res.users', string='Assigned to', tracking=True, index=True, default=False)
+    team_id = fields.Many2one('escalator.team', string='Support Team', tracking=True,
+        default=lambda self: self.env['escalator.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, help='When sending mails, the default email address is taken from the support team.')
-    date_deadline = fields.Datetime(string='Deadline', track_visibility='onchange')
-    date_done = fields.Datetime(string='Done', track_visibility='onchange')
+    date_deadline = fields.Datetime(string='Deadline', tracking=True)
+    date_done = fields.Datetime(string='Done', tracking=True)
 
-    stage_id = fields.Many2one('escalator_lite.stage', string='Stage', index=True, track_visibility='onchange',
-                               domain="[]",
-                               copy=False,
-                               group_expand='_read_group_stage_ids',
-                               default=_get_default_stage_id)
-    priority = fields.Selection(AVAILABLE_PRIORITIES, 'Priority', index=True, default='1', track_visibility='onchange')
-    kanban_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')],
-                                    string='Kanban State', track_visibility='onchange',
-                                    required=True, default='normal',
-                                    help="""A Ticket's kanban state indicates special situations affecting it:\n
-                                           * Normal is the default situation\n
-                                           * Blocked indicates something is preventing the progress of this ticket\n
-                                           * Ready for next stage indicates the ticket is ready to go to next stage""")
-
-    color = fields.Integer('Color Index')
+    stage_id = fields.Many2one('escalator.stage', string='Stage', index=True, tracking=True,
+                             domain="[]",
+                             copy=False,
+                             group_expand='_read_group_stage_ids',
+                             default=_get_default_stage_id)
+    priority = fields.Selection(AVAILABLE_PRIORITIES, string='Priority', index=True, default='1', tracking=True)
+    kanban_state = fields.Selection([('normal', 'In Progress'), 
+                                   ('blocked', 'Blocked'), 
+                                   ('done', 'Ready for next stage')],
+                                    string='Kanban State', 
+                                    tracking=True,
+                                    required=True, 
+                                    default='normal',
+                                    help="""A Ticket's kanban state indicates special situations affecting it:
+                                     * Normal is the default situation
+                                     * Blocked indicates something is preventing the progress of this ticket
+                                     * Ready for next stage indicates the ticket is ready to be pulled to the next stage""")
+    color = fields.Integer('Color Index', default=0)
     legend_blocked = fields.Char(related="stage_id.legend_blocked", readonly=True)
     legend_done = fields.Char(related="stage_id.legend_done", readonly=True)
     legend_normal = fields.Char(related="stage_id.legend_normal", readonly=True)
 
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company',
+                                default=lambda self: self.env.company)
     
+    # Tracking fields
+    create_date = fields.Datetime('Creation Date', readonly=True, index=True)
+    write_date = fields.Datetime('Last Updated', readonly=True, index=True)
+    create_uid = fields.Many2one('res.users', string='Created by', readonly=True)
+    write_uid = fields.Many2one('res.users', string='Last Updated by', readonly=True)
+
     expense_sheet_id = fields.Many2one(
         string='Expense associed',
         comodel_name='hr.expense.sheet',
