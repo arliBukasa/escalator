@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "escalator",
-    'version': "1.1.1",
+    'name': "Escalator",
+    'version': "15.0.1.0.0",
     'author': "Arnold BUKASA",
-    'category': "Tools",
+    'category': "Services/Helpdesk",
     'support': "golubev@svami.in.ua",
-    'summary': "open ticket for unproccessed task",
+    'summary': "Open ticket for unprocessed task with team management",
     'description': """
-        Easy to use escalator
-        with teams and website portal
+        Escalator - Helpdesk & Ticket Management
+        =====================================
+        
+        * Gestion des tickets avec équipes et portail web
+        * Suivi des étapes de traitement
+        * Catégorisation des tickets
+        * Automatisation des processus
     """,
-    'license':'LGPL-3',
+    'license': 'LGPL-3',
     'data': [
         'security/escalator_security.xml',
         'security/ir.model.access.csv',
@@ -26,7 +31,22 @@
         'demo/escalator_demo.xml',
     ],
     'images': ['static/description/banner.jpg'],
-    'depends': ['base', 'mail', 'portal','hr_expense'],
+    'depends': [
+        'base',
+        'mail',
+        'portal',
+        'hr_expense',
+        'web',
+    ],
     'application': True,
-    'sequence':1,
+    'sequence': 1,
+    'installable': True,
+    'assets': {
+        'web.assets_backend': [
+            'escalator/static/src/**/*',
+        ],
+        'web.assets_frontend': [
+            'escalator/static/src/**/*',
+        ],
+    },
 }
